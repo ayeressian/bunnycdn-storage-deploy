@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --watch",
-    "build": "tsc"
+    "build": "ncc build src/index.ts -o dist"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.13",
     "@types/node-fetch": "^2.5.7",
+    "@zeit/ncc": "^0.22.3",
     "jest": "^26.1.0",
     "jest-fetch-mock": "^3.0.3",
     "ts-jest": "^26.1.1",
