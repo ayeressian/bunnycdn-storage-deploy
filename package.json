@@ -21,7 +21,8 @@
   "dependencies": {
     "@actions/core": "^1.2.4",
     "@actions/github": "^3.0.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "readdirp": "^3.4.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.0",
@@ -31,5 +32,10 @@
     "jest-fetch-mock": "^3.0.3",
     "ts-jest": "^26.1.1",
     "typescript": "^3.9.5"
+  },
+  "jest": {
+    "setupFiles": [
+      "./setupJest.js"
+    ]
   }
 }
