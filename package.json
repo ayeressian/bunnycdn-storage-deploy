@@ -2,10 +2,11 @@
   "name": "bunnycdn-storage-deploy",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "start": "tsc && node dist/test.js",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
