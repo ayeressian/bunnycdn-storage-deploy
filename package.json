@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && node dist/test.js",
     "test": "jest --watch",
     "build": "tsc"
   },
