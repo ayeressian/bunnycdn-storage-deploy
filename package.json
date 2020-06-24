@@ -1,0 +1,35 @@
+{
+  "name": "bunnycdn-storage-deploy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/test.js",
+    "test": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayeressian/bunnycdn-storage-deploy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayeressian/bunnycdn-storage-deploy/issues"
+  },
+  "homepage": "https://github.com/ayeressian/bunnycdn-storage-deploy#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^3.0.0",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.13",
+    "@types/node-fetch": "^2.5.7",
+    "jest": "^26.1.0",
+    "jest-fetch-mock": "^3.0.3",
+    "ts-jest": "^26.1.1",
+    "typescript": "^3.9.5"
+  }
+}

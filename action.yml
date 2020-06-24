@@ -1,0 +1,14 @@
+name: 'BunnyCDN storage deployer'
+description: 'BunnyCDN storage deployer'
+inputs:
+  source:
+    description: 'target directory to be deployed'
+    required: true
+    default: './dist'
+  storageZoneName:
+    required: true
+  apiKey:
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'
