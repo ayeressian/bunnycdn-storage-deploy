@@ -1,13 +1,13 @@
 import uploader from './uploader';
-import core from '@actions/core';
-import {resolve} from 'path';
+import { getInput, setFailed } from '@actions/core';
+import { join } from 'path';
+import { Utils } from '@technote-space/github-action-helper';
 
 try {
-  console.log('AAAAA', __dirname);
-  const source = core.getInput('source');
-  const storageZoneName = core.getInput('storageZoneName');
-  const accessKey = core.getInput('accessKey');
-  uploader(resolve(source), storageZoneName, accessKey);
+  const source = join(Utils.getWorkspace(), getInput('source'));
+  const storageZoneName = getInput('storageZoneName');
+  const accessKey = getInput('accessKey');
+  uploader(source, storageZoneName, accessKey);
 } catch (error) {
-  core.setFailed(error.message);
+  setFailed(error.message);
 }

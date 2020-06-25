@@ -21,6 +21,7 @@
   "dependencies": {
     "@actions/core": "^1.2.4",
     "@actions/github": "^3.0.0",
+    "@technote-space/github-action-helper": "^2.0.11",
     "@zeit/ncc": "^0.22.3",
     "node-fetch": "^2.6.0",
     "readdirp": "^3.4.0"

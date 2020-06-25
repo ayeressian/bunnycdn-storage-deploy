@@ -19,7 +19,6 @@ function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: s
 }
 
 export default async function run(path: string, storageName: string, accessKey: string) {
-  console.log(readdirp(path).readableLength);
   for await (const entry of readdirp(path)) {
     uploadFile(entry, storageName, accessKey);
   }
