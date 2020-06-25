@@ -7,7 +7,7 @@ function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: s
   const fileSizeInBytes = stats.size;
 
   let readStream = fs.createReadStream(entry.fullPath);
-
+  console.log(entry);
   return fetch(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
     method: 'POST',
     headers: {
@@ -19,7 +19,9 @@ function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: s
 }
 
 export default async function run(path: string, storageName: string, accessKey: string) {
+  const uploadPromises = [];
   for await (const entry of readdirp(path)) {
-    uploadFile(entry, storageName, accessKey);
+    uploadPromises.push(uploadFile(entry, storageName, accessKey));
   }
+  await Promise.all(uploadPromises);
 }

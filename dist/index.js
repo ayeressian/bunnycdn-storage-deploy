@@ -9744,7 +9744,7 @@ function uploadFile(entry, storageName, accessKey) {
 }
 async function run(path, storageName, accessKey) {
     for await (const entry of readdirp_1.default(path)) {
-        uploadFile(entry, storageName, accessKey);
+        await uploadFile(entry, storageName, accessKey);
     }
 }
 exports.default = run;
