@@ -1,7 +1,7 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
 import readdirp from 'readdirp';
-import { info } from '@actions/core';
+import { info, error } from '@actions/core';
 
 function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: string) {
   const stats = fs.statSync(entry.fullPath);
@@ -19,8 +19,12 @@ function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: s
   }).then(response => {
     if (response.status === 200) {
       info(`Successfull deployment of ${entry.path}`);
+    } else {
+      return response;
     }
     return response;
+  }).catch(errorObj => {
+    error(errorObj);
   });
 }
 

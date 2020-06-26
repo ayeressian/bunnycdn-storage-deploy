@@ -9750,7 +9750,12 @@ function uploadFile(entry, storageName, accessKey) {
         if (response.status === 200) {
             core_1.info(`Successfull deployment of ${entry.path}`);
         }
+        else {
+            return response;
+        }
         return response;
+    }).catch(errorObj => {
+        core_1.error(errorObj);
     });
 }
 async function run(path, storageName, accessKey) {
