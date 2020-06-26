@@ -6,6 +6,7 @@ import { info } from '@actions/core';
 function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: string) {
   const readStream = fs.createReadStream(entry.fullPath);
   info(`Deploying ${entry.path}`);
+  info(`URL https://storage.bunnycdn.com/${storageName}/${entry.path}`);
   return fetch(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
     method: 'PUT',
     headers: {
