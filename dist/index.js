@@ -4053,6 +4053,7 @@ const core_1 = __webpack_require__(470);
 const path_1 = __webpack_require__(622);
 const github_action_helper_1 = __webpack_require__(61);
 async function run() {
+    core_1.info(`version a`);
     try {
         const source = path_1.join(github_action_helper_1.Utils.getWorkspace(), core_1.getInput('source'));
         const storageZoneName = core_1.getInput('storageZoneName');
@@ -4061,10 +4062,10 @@ async function run() {
         await uploader_1.default(source, storageZoneName, accessKey);
     }
     catch (error) {
-        core_1.setFailed(error.message);
+        core_1.setFailed(error);
     }
 }
-run();
+void run();
 
 
 /***/ }),
@@ -9735,35 +9736,29 @@ const node_fetch_1 = __importDefault(__webpack_require__(454));
 const readdirp_1 = __importDefault(__webpack_require__(359));
 const core_1 = __webpack_require__(470);
 function uploadFile(entry, storageName, accessKey) {
-    const stats = fs_1.default.statSync(entry.fullPath);
-    const fileSizeInBytes = stats.size;
-    let readStream = fs_1.default.createReadStream(entry.fullPath);
+    const readStream = fs_1.default.createReadStream(entry.fullPath);
     core_1.info(`Deploying ${entry.path}`);
     return node_fetch_1.default(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
         method: 'POST',
         headers: {
             "AccessKey": accessKey,
-            "Content-length": fileSizeInBytes.toString()
         },
         body: readStream
     }).then(response => {
+        core_1.info(`Response ${JSON.stringify(response)}`);
         if (response.status === 200) {
             core_1.info(`Successfull deployment of ${entry.path}`);
         }
         else {
-            return response;
+            throw new Error(`Uploading ${entry.path} has failed width status code ${response.status}.`);
         }
         return response;
-    }).catch(errorObj => {
-        core_1.error(errorObj);
     });
 }
 async function run(path, storageName, accessKey) {
-    const uploadPromises = [];
     for await (const entry of readdirp_1.default(path)) {
-        uploadPromises.push(uploadFile(entry, storageName, accessKey));
+        await uploadFile(entry, storageName, accessKey);
     }
-    await Promise.all(uploadPromises);
 }
 exports.default = run;
 
