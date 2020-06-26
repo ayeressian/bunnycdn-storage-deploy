@@ -9739,7 +9739,7 @@ function uploadFile(entry, storageName, accessKey) {
     const readStream = fs_1.default.createReadStream(entry.fullPath);
     core_1.info(`Deploying ${entry.path}`);
     return node_fetch_1.default(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             "AccessKey": accessKey,
         },

@@ -7,7 +7,7 @@ function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: s
   const readStream = fs.createReadStream(entry.fullPath);
   info(`Deploying ${entry.path}`);
   return fetch(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       "AccessKey": accessKey,
     },
