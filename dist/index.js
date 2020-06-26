@@ -4053,7 +4053,7 @@ const core_1 = __webpack_require__(470);
 const path_1 = __webpack_require__(622);
 const github_action_helper_1 = __webpack_require__(61);
 async function run() {
-    core_1.info(`version a`);
+    core_1.info(`version b`);
     try {
         const source = path_1.join(github_action_helper_1.Utils.getWorkspace(), core_1.getInput('source'));
         const storageZoneName = core_1.getInput('storageZoneName');
@@ -9738,6 +9738,7 @@ const core_1 = __webpack_require__(470);
 function uploadFile(entry, storageName, accessKey) {
     const readStream = fs_1.default.createReadStream(entry.fullPath);
     core_1.info(`Deploying ${entry.path}`);
+    core_1.info(`URL https://storage.bunnycdn.com/${storageName}/${entry.path}`);
     return node_fetch_1.default(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
         method: 'PUT',
         headers: {
