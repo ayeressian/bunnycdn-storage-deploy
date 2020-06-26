@@ -4052,15 +4052,19 @@ const uploader_1 = __importDefault(__webpack_require__(721));
 const core_1 = __webpack_require__(470);
 const path_1 = __webpack_require__(622);
 const github_action_helper_1 = __webpack_require__(61);
-try {
-    const source = path_1.join(github_action_helper_1.Utils.getWorkspace(), core_1.getInput('source'));
-    const storageZoneName = core_1.getInput('storageZoneName');
-    const accessKey = core_1.getInput('accessKey');
-    uploader_1.default(source, storageZoneName, accessKey);
+async function run() {
+    try {
+        const source = path_1.join(github_action_helper_1.Utils.getWorkspace(), core_1.getInput('source'));
+        const storageZoneName = core_1.getInput('storageZoneName');
+        const accessKey = core_1.getInput('accessKey');
+        core_1.info(`Deploying ${source}`);
+        await uploader_1.default(source, storageZoneName, accessKey);
+    }
+    catch (error) {
+        core_1.setFailed(error.message);
+    }
 }
-catch (error) {
-    core_1.setFailed(error.message);
-}
+run();
 
 
 /***/ }),
@@ -9729,10 +9733,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(__webpack_require__(747));
 const node_fetch_1 = __importDefault(__webpack_require__(454));
 const readdirp_1 = __importDefault(__webpack_require__(359));
+const core_1 = __webpack_require__(470);
 function uploadFile(entry, storageName, accessKey) {
     const stats = fs_1.default.statSync(entry.fullPath);
     const fileSizeInBytes = stats.size;
     let readStream = fs_1.default.createReadStream(entry.fullPath);
+    core_1.info(`Deploying ${entry.path}`);
     return node_fetch_1.default(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
         method: 'POST',
         headers: {
@@ -9740,12 +9746,19 @@ function uploadFile(entry, storageName, accessKey) {
             "Content-length": fileSizeInBytes.toString()
         },
         body: readStream
+    }).then(response => {
+        if (response.status === 200) {
+            core_1.info(`Successfull deployment of ${entry.path}`);
+        }
+        return response;
     });
 }
 async function run(path, storageName, accessKey) {
+    const uploadPromises = [];
     for await (const entry of readdirp_1.default(path)) {
-        await uploadFile(entry, storageName, accessKey);
+        uploadPromises.push(uploadFile(entry, storageName, accessKey));
     }
+    await Promise.all(uploadPromises);
 }
 exports.default = run;
 
