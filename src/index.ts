@@ -4,6 +4,7 @@ import { join } from 'path';
 import { Utils } from '@technote-space/github-action-helper';
 
 async function run() {
+  info(`version a`);
   try {
     const source = join(Utils.getWorkspace(), getInput('source'));
     const storageZoneName = getInput('storageZoneName');
@@ -11,8 +12,8 @@ async function run() {
     info(`Deploying ${source}`);
     await uploader(source, storageZoneName, accessKey);
   } catch (error) {
-    setFailed(error.message);
+    setFailed(error);
   }
 }
 
-run();
+void run();
