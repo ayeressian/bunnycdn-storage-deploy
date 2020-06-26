@@ -6,8 +6,6 @@ import { info } from '@actions/core';
 function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: string) {
   const readStream = fs.createReadStream(entry.fullPath);
   info(`Deploying ${entry.path}`);
-  info(`URL https://storage.bunnycdn.com/${storageName}/${entry.path}`);
-  info(`accesskey ${accessKey}`);
   return fetch(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
     method: 'PUT',
     headers: {
@@ -15,8 +13,7 @@ function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: s
     },
     body: readStream
   }).then(response => {
-    info(`Response ${JSON.stringify(response)}`);
-    if (response.status === 200) {
+    if (response.status === 201) {
       info(`Successfull deployment of ${entry.path}`);
     } else {
       throw new Error(`Uploading ${entry.path} has failed width status code ${response.status}.`);

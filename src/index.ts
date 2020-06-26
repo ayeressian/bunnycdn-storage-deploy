@@ -4,7 +4,6 @@ import { join } from 'path';
 import { Utils } from '@technote-space/github-action-helper';
 
 async function run() {
-  info(`version b`);
   try {
     const source = join(Utils.getWorkspace(), getInput('source'));
     const storageZoneName = getInput('storageZoneName');
