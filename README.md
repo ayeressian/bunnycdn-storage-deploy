@@ -19,7 +19,7 @@ This action deploys selected directory to BunnyCDN storage.
 ## Example usage
 ````
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@latest
+  uses: ayeressian/bunnycdn-storage-deploy@master
   with:
     source: "dist"
     storageZoneName: "myzone"
