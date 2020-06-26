@@ -1,13 +1,14 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
 import readdirp from 'readdirp';
+import { info } from '@actions/core';
 
 function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: string) {
   const stats = fs.statSync(entry.fullPath);
   const fileSizeInBytes = stats.size;
 
   let readStream = fs.createReadStream(entry.fullPath);
-  console.log(entry);
+  info(`Deploying ${entry.path}`);
   return fetch(`https://storage.bunnycdn.com/${storageName}/${entry.path}`, {
     method: 'POST',
     headers: {
@@ -15,6 +16,11 @@ function uploadFile(entry: readdirp.EntryInfo, storageName: string, accessKey: s
       "Content-length": fileSizeInBytes.toString()
     },
     body: readStream
+  }).then(response => {
+    if (response.status === 200) {
+      info(`Successfull deployment of ${entry.path}`);
+    }
+    return response;
   });
 }
 
