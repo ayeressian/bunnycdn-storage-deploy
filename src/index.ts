@@ -11,8 +11,8 @@ async function run() {
     info(`Deploying ${source}`);
     await uploader(source, storageZoneName, accessKey);
   } catch (error) {
-    setFailed(error.message);
+    setFailed(error);
   }
 }
 
-run();
+void run();
