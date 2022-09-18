@@ -39,8 +39,10 @@ It will remove the files from storage before uploading if "true" provided.
   uses: ayeressian/bunnycdn-storage-deploy@v0.0.1
   with:
     source: "dist"
-    storageZoneName: "mystoragezone"
-    accessKey: "${{ secrets.STORAGE_KEY_TEST }}"
-    pullZoneId: "${{ secrets.ZONE_ID_TEST }}"
+    storageZoneName: "${{ secrets.STORAGE_NAME }}"
+    accessKey: "${{ secrets.STORAGE_KEY }}"
+    pullZoneId: "${{ secrets.ZONE_ID }}"
+    pullZoneAccessKey: "${{ secrets.PULL_ZONE_KEY }}"
     remove: "true"
+    purge: "true"
 ```
