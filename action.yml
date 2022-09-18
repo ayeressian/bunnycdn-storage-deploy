@@ -1,17 +1,29 @@
-name: 'BunnyCDN storage deployer'
-description: 'BunnyCDN storage deployer'
+name: "BunnyCDN storage deployer"
+description: "BunnyCDN storage deployer"
 inputs:
   source:
-    description: 'target directory to be deployed'
+    description: "The source directory folder."
     required: true
-    default: './dist'
   storageZoneName:
+    description: "The name of your storage zone where you are connecting to."
     required: true
   accessKey:
+    description: "The storage API key."
     required: true
+  pullZoneId:
+    description: "Is required for purging."
+  pullZoneAccessKey:
+    description: "Is required for purging."
+  purge:
+    description: "It will purge the pull zone if true. pullZoneId and pullZoneAccessKey should be provided."
+    default: "false"
+  remove:
+    description: "It will remove the files from storage before uploading if 'true' provided."
+    default: "false"
+
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"
 branding:
-  icon: 'upload-cloud'
-  color: 'orange'
+  icon: "upload-cloud"
+  color: "orange"

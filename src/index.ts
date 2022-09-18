@@ -1,18 +1,39 @@
-import uploader from './uploader';
-import { getInput, setFailed, info } from '@actions/core';
-import { join } from 'path';
-import { Utils } from '@technote-space/github-action-helper';
+import { getInput, setFailed, info } from "@actions/core";
+import { join } from "path";
+import uploader from "./uploader";
+import purge from "./purge";
+import remove from "./remove";
 
-async function run() {
+const run = async () => {
   try {
-    const source = join(Utils.getWorkspace(), getInput('source'));
-    const storageZoneName = getInput('storageZoneName');
-    const accessKey = getInput('accessKey');
-    info(`Deploying ${source}`);
-    await uploader(source, storageZoneName, accessKey);
+    const source = join(
+      process.env.GITHUB_WORKSPACE as string,
+      getInput("source")
+    );
+    const storageZoneName = getInput("storageZoneName");
+    const accessKey = getInput("accessKey");
+    const removeFlag = getInput("remove");
+    const pullZoneId = getInput("pullZoneId");
+    const pullZoneAccessKey = getInput("pullZoneAccessKey");
+    const purgeFlag = getInput("purge");
+
+    if (removeFlag === "true") {
+      info(`Deleting files form storage ${storageZoneName}`);
+      await remove(storageZoneName, accessKey);
+    }
+
+    if (storageZoneName && accessKey) {
+      info(`Deploying ${source} folder/file to storage ${storageZoneName}`);
+      await uploader(source, storageZoneName, accessKey);
+    }
+
+    if (pullZoneId && pullZoneAccessKey && purgeFlag) {
+      info(`Purging pull zone with the id ${pullZoneId}`);
+      await purge(pullZoneId, pullZoneAccessKey);
+    }
   } catch (error) {
-    setFailed(error);
+    setFailed(error as string | Error);
   }
-}
+};
 
 void run();

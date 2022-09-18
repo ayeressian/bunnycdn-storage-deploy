@@ -1,0 +1,23 @@
+name: Test deploy to BunnyCDN
+
+on:
+  push:
+    branches:
+      - feature/*
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Deploy
+        uses: ayeressian/bunnycdn-storage-deploy@feature/purge-remove
+        with:
+          source: "e2e/test-dir"
+          storageZoneName: "${{ secrets.STORAGE_NAME_TEST }}"
+          accessKey: "${{ secrets.STORAGE_KEY_TEST }}"
+          pullZoneId: "${{ secrets.ZONE_ID_TEST }}"
+          pullZoneAccessKey: "${{ secrets.PULL_ZONE_KEY_TEST }}"
+          remove: "true"
+          purge: "true"
