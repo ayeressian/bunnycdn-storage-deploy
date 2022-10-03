@@ -18,11 +18,11 @@ This action deploys selected directory to BunnyCDN storage.
 
 ### `pullZoneId`
 
-Necessary for purgeing pull zone.
+Necessary for purging pull zone.
 
 ### `pullZoneAccessKey`
 
-Necessary for purgeing pull zone.
+Necessary for purging pull zone.
 
 ### `purge`
 
