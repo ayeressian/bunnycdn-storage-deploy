@@ -18,7 +18,7 @@ const run = async () => {
     const purgeFlag = getInput("purge");
 
     if (removeFlag === "true") {
-      info(`Deleting files form storage ${storageZoneName}`);
+      info(`Deleting files from storage ${storageZoneName}`);
       await remove(storageZoneName, accessKey);
     }
 
