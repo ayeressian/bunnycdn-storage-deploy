@@ -40,7 +40,7 @@ It will remove the files from storage before uploading if "true" provided.
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v0.0.1
+  uses: ayeressian/bunnycdn-storage-deploy@v0.0.2
   with:
     source: "dist"
     storageZoneName: "${{ secrets.STORAGE_NAME }}"
