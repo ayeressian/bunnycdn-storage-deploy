@@ -6,12 +6,13 @@ import { info } from "@actions/core";
 const uploadFile = async (
   entry: readdirp.EntryInfo,
   storageName: string,
-  accessKey: string
+  accessKey: string,
+  storageEndpoint: string
 ) => {
   const readStream = fs.createReadStream(entry.fullPath);
   info(`Deploying ${entry.path}`);
   const response = await fetch(
-    `https://storage.bunnycdn.com/${storageName}/${entry.path}`,
+    `https://${storageEndpoint}/${storageName}/${entry.path}`,
     {
       method: "PUT",
       headers: {
@@ -34,9 +35,10 @@ const uploadFile = async (
 export default async function run(
   path: string,
   storageName: string,
-  accessKey: string
+  accessKey: string,
+  storageEndpoint: string
 ): Promise<void> {
   for await (const entry of readdirp(path)) {
-    await uploadFile(entry, storageName, accessKey);
+    await uploadFile(entry, storageName, accessKey, storageEndpoint);
   }
 }

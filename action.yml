@@ -10,6 +10,9 @@ inputs:
   accessKey:
     description: "The storage API key."
     required: true
+  storageEndpoint:
+    description: "The storage endpoint"
+    default: "storage.bunnycdn.com"
   pullZoneId:
     description: "Is required for purging."
   pullZoneAccessKey:

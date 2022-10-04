@@ -16,6 +16,10 @@ This action deploys selected directory to BunnyCDN storage.
 
 **Required** The storage API key.
 
+### `storageEndpoint`
+
+The storage endpoint. Default value is storage.bunnycdn.com
+
 ### `pullZoneId`
 
 Necessary for purging pull zone.
