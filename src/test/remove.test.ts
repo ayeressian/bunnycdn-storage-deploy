@@ -5,7 +5,7 @@ import remove from "../remove";
 
 describe("when calling remove function", () => {
   it("should call remove API", async () => {
-    await remove("storageName", "key");
+    await remove("storageName", "key", "storage.bunnycdn.com");
     expect(fetchMock).toHaveBeenCalledWith(
       "https://storage.bunnycdn.com/storageName/",
       expect.anything()

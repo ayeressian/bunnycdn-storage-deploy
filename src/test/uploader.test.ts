@@ -6,7 +6,12 @@ import uploader from "../uploader";
 
 describe("when uploading a directory with 3 files", () => {
   it("should call fetch api 3 times with correct arguments", async () => {
-    await uploader(resolve("src/test/test-upload-dir"), "storageName", "key");
+    await uploader(
+      resolve("src/test/test-upload-dir"),
+      "storageName",
+      "key",
+      "storage.bunnycdn.com"
+    );
     expect(fetchMock).toHaveBeenCalledWith(
       "https://storage.bunnycdn.com/storageName/test.txt",
       expect.anything()

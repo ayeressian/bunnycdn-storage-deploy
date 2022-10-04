@@ -3,9 +3,10 @@ import fetch, { Response } from "node-fetch";
 
 const remove = async (
   storageName: string,
-  accessKey: string
+  accessKey: string,
+  storageEndpoint: string
 ): Promise<Response> => {
-  const response = await fetch(`https://storage.bunnycdn.com/${storageName}/`, {
+  const response = await fetch(`https://${storageEndpoint}/${storageName}/`, {
     method: "DELETE",
     headers: {
       AccessKey: accessKey,
