@@ -14,9 +14,7 @@ const purge = async (
       },
     }
   );
-  // THERE IS A BUG IN API. 200 HTTP CODE IS VALID SOMETIMES. ACCORDING TO THEIR DOC IT SHOULDN'T BE
-  // https://docs.bunny.net/reference/pullzonepublic_purgecachepostbytag
-  if (response.status !== 204 && response.status !== 200) {
+  if (response.status !== 204) {
     throw new Error(`Purging failed with the status code ${response.status}.`);
   }
   info("Cache successfully purged.");
