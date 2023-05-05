@@ -16,7 +16,6 @@ const run = async () => {
     const accessKey = getInput("accessKey");
     const removeFlag = getInput("remove");
     const pullZoneId = getInput("pullZoneId");
-    const pullZoneAccessKey = getInput("pullZoneAccessKey");
     const purgeFlag = getInput("purge");
 
     if (removeFlag === "true") {
@@ -29,9 +28,9 @@ const run = async () => {
       await uploader(source, storageZoneName, accessKey, storageEndpoint);
     }
 
-    if (pullZoneId && pullZoneAccessKey && purgeFlag) {
+    if (pullZoneId && accessKey && purgeFlag) {
       info(`Purging pull zone with the id ${pullZoneId}`);
-      await purge(pullZoneId, pullZoneAccessKey);
+      await purge(pullZoneId, accessKey);
     }
   } catch (error) {
     setFailed(error as string | Error);

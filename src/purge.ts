@@ -6,7 +6,7 @@ const purge = async (
   accessKey: string
 ): Promise<Response> => {
   const response = await fetch(
-    `https://bunnycdn.com/api/pullzone/${pullZoneId}/purgeCache`,
+    `https://api.bunny.net/pullzone/${pullZoneId}/purgeCache`,
     {
       method: "POST",
       headers: {
