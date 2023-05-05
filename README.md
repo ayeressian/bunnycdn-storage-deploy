@@ -24,10 +24,6 @@ The storage endpoint. Default value is storage.bunnycdn.com
 
 Necessary for purging pull zone.
 
-### `pullZoneAccessKey`
-
-Necessary for purging pull zone.
-
 ### `purge`
 
 It will purge the pull zone if true. pullZoneId and pullZoneAccessKey should be provided.
@@ -40,13 +36,12 @@ It will remove the files from storage before uploading if "true" provided.
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v1.1.3
+  uses: ayeressian/bunnycdn-storage-deploy@v1.1.4
   with:
     source: "dist"
     storageZoneName: "${{ secrets.STORAGE_NAME }}"
     accessKey: "${{ secrets.STORAGE_KEY }}"
     pullZoneId: "${{ secrets.ZONE_ID }}"
-    pullZoneAccessKey: "${{ secrets.PULL_ZONE_KEY }}"
     remove: "true"
     purge: "true"
 ```

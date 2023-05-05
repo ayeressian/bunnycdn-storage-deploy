@@ -7,7 +7,7 @@ describe("when calling purge function", () => {
   it("should call purge API", async () => {
     await purge("zoneId", "zoneKey");
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://bunnycdn.com/api/pullzone/zoneId/purgeCache",
+      "https://api.bunny.net/pullzone/zoneId/purgeCache",
       expect.anything()
     );
     expect(fetchMock).toHaveBeenCalledTimes(1);
