@@ -20,6 +20,10 @@ This action deploys selected directory to BunnyCDN storage.
 
 The storage endpoint. Default value is storage.bunnycdn.com
 
+### `storagePassword`
+
+The storage passowd. It should be read and write capable.
+
 ### `pullZoneId`
 
 Necessary for purging pull zone.
@@ -36,10 +40,11 @@ It will remove the files from storage before uploading if "true" provided.
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v1.1.4
+  uses: ayeressian/bunnycdn-storage-deploy@v1.1.5
   with:
     source: "dist"
     storageZoneName: "${{ secrets.STORAGE_NAME }}"
+    storagePassword: "${{ secrets.STORAGE_PASSWORD }}"
     accessKey: "${{ secrets.STORAGE_KEY }}"
     pullZoneId: "${{ secrets.ZONE_ID }}"
     remove: "true"
