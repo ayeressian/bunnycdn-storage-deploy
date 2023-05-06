@@ -14,7 +14,7 @@ This action deploys selected directory to BunnyCDN storage.
 
 ### `accessKey`
 
-**Required** The storage API key.
+**Required** The API key.
 
 ### `storageEndpoint`
 
