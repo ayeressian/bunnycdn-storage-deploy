@@ -6,7 +6,9 @@ const remove = async (
   accessKey: string,
   storageEndpoint: string
 ): Promise<Response> => {
-  const response = await fetch(`https://${storageEndpoint}/${storageName}/`, {
+  const url = `https://${storageEndpoint}/${storageName}/`;
+  info(`Removing storage data with ${url}`);
+  const response = await fetch(url, {
     method: "DELETE",
     headers: {
       AccessKey: accessKey,

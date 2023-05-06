@@ -13,6 +13,7 @@ const run = async () => {
     const storageZoneName = getInput("storageZoneName");
     const storageEndpoint =
       getInput("storageEndpoint") ?? "storage.bunnycdn.com";
+    const storagePassword = getInput("storagePassword");
     const accessKey = getInput("accessKey");
     const removeFlag = getInput("remove");
     const pullZoneId = getInput("pullZoneId");
@@ -20,12 +21,12 @@ const run = async () => {
 
     if (removeFlag === "true") {
       info(`Deleting files from storage ${storageZoneName}`);
-      await remove(storageZoneName, accessKey, storageEndpoint);
+      await remove(storageZoneName, storagePassword, storageEndpoint);
     }
 
-    if (storageZoneName && accessKey) {
+    if (storageZoneName && storagePassword) {
       info(`Deploying ${source} folder/file to storage ${storageZoneName}`);
-      await uploader(source, storageZoneName, accessKey, storageEndpoint);
+      await uploader(source, storageZoneName, storagePassword, storageEndpoint);
     }
 
     if (pullZoneId && accessKey && purgeFlag) {
