@@ -22,7 +22,7 @@ The storage endpoint. Default value is storage.bunnycdn.com
 
 ### `storagePassword`
 
-The storage passowd. It should be read and write capable.
+The storage password. It should be read and write capable.
 
 ### `pullZoneId`
 

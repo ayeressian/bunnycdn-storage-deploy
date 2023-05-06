@@ -7,18 +7,19 @@ inputs:
   storageZoneName:
     description: "The name of your storage zone where you are connecting to."
     required: true
-  accessKey:
-    description: "The storage API key."
+  storagePassword:
+    description: "The storage password. It should be read and write capable."
     required: true
   storageEndpoint:
     description: "The storage endpoint"
     default: "storage.bunnycdn.com"
+  accessKey:
+    description: "The API key."
+    required: true  
   pullZoneId:
     description: "Is required for purging."
-  pullZoneAccessKey:
-    description: "Is required for purging."
   purge:
-    description: "It will purge the pull zone if true. pullZoneId and pullZoneAccessKey should be provided."
+    description: "It will purge the pull zone if true. pullZoneId and accessKey should be provided."
     default: "false"
   remove:
     description: "It will remove the files from storage before uploading if 'true' provided."

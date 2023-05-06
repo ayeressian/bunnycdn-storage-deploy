@@ -10,7 +10,9 @@ const uploadFile = async (
   storageEndpoint: string
 ) => {
   const readStream = fs.createReadStream(entry.fullPath);
-  info(`Deploying ${entry.path}`);
+  info(
+    `Deploying ${entry.path} by https://${storageEndpoint}/${storageName}/${entry.path}`
+  );
   const response = await fetch(
     `https://${storageEndpoint}/${storageName}/${entry.path}`,
     {
