@@ -20,6 +20,6 @@ jobs:
           storagePassword: "${{ secrets.STORAGE_PASSWORD_TEST }}"
           accessKey: "${{ secrets.ACCESS_KEY_TEST }}"
           pullZoneId: "${{ secrets.ZONE_ID_TEST }}"
-          upload: "true",
+          upload: "true"
           remove: "true"
           purge: "true"
