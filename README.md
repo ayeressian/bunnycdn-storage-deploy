@@ -1,20 +1,33 @@
 # bunnycdn-storage-deploy
 
-This action deploys selected directory to BunnyCDN storage.
+This action performs 3 operations.
+* Uploads files and folders to storage.
+* Removes all the files from storage.
+* Purges pull zone.
+
+Each operation can be activated with their respective upload, remove and purge flags.
 
 ## Inputs
 
+### `upload`
+
+It will upload files and folders if "true" provided. source, storageZoneName and storagePassword inputs should be provided.
+
+### `remove`
+
+It will remove all the files from storage before uploading if "true" provided. storageZoneName and storagePassword inputs should be provided.
+
+### `purge`
+
+It will purge the pull zone if "true" provided. pullZoneId and accessKey inputs should be provided.
+
 ### `source`
 
-**Required** The source directory folder.
+The source directory that should be uploaded.
 
 ### `storageZoneName`
 
-**Required** The name of your storage zone where you are connecting to.
-
-### `accessKey`
-
-**Required** The API key.
+The name of storage zone where you are connecting to.
 
 ### `storageEndpoint`
 
@@ -24,29 +37,26 @@ The storage endpoint. Default value is storage.bunnycdn.com
 
 The storage password. It should be read and write capable.
 
+### `accessKey`
+
+The API key.
+
 ### `pullZoneId`
 
-Necessary for purging pull zone.
-
-### `purge`
-
-It will purge the pull zone if true. pullZoneId and pullZoneAccessKey should be provided.
-
-### `remove`
-
-It will remove the files from storage before uploading if "true" provided.
+Pull zone ID.
 
 ## Example usage
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v1.1.6
+  uses: ayeressian/bunnycdn-storage-deploy@v=2.0.0
   with:
     source: "dist"
     storageZoneName: "${{ secrets.STORAGE_NAME }}"
     storagePassword: "${{ secrets.STORAGE_PASSWORD }}"
     accessKey: "${{ secrets.STORAGE_KEY }}"
     pullZoneId: "${{ secrets.ZONE_ID }}"
+    upload: "true"
     remove: "true"
     purge: "true"
 ```

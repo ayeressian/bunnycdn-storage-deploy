@@ -15,23 +15,55 @@ const run = async () => {
       getInput("storageEndpoint") ?? "storage.bunnycdn.com";
     const storagePassword = getInput("storagePassword");
     const accessKey = getInput("accessKey");
-    const removeFlag = getInput("remove");
     const pullZoneId = getInput("pullZoneId");
-    const purgeFlag = getInput("purge");
+
+    const purgePullZoneFlag = getInput("purgePullZone");
+    const removeFlag = getInput("remove");
+    const uploadFlag = getInput("upload");
 
     if (removeFlag === "true") {
+      if (!storageZoneName) {
+        throw new Error("Can't remove, storageZoneName was not set.");
+      }
+      if (!storagePassword) {
+        throw new Error("Can't remove, storagePassword was not set.");
+      }
       info(`Deleting files from storage ${storageZoneName}`);
       await remove(storageZoneName, storagePassword, storageEndpoint);
     }
 
-    if (storageZoneName && storagePassword) {
-      info(`Deploying ${source} folder/file to storage ${storageZoneName}`);
-      await uploader(source, storageZoneName, storagePassword, storageEndpoint);
+    if (uploadFlag === "true") {
+      if (!source) {
+        throw new Error("Can't upload, source was not set.");
+      }
+      if (!storageZoneName) {
+        throw new Error("Can't upload, storageZoneName was not set.");
+      }
+      if (!storagePassword) {
+        throw new Error("Can't upload, storagePassword was not set.");
+      }
+      if (storageZoneName && storagePassword) {
+        info(`Uploading ${source} folder/file to storage ${storageZoneName}`);
+        await uploader(
+          source,
+          storageZoneName,
+          storagePassword,
+          storageEndpoint
+        );
+      }
     }
 
-    if (pullZoneId && accessKey && purgeFlag) {
-      info(`Purging pull zone with the id ${pullZoneId}`);
-      await purge(pullZoneId, accessKey);
+    if (purgePullZoneFlag == "true") {
+      if (!pullZoneId) {
+        throw new Error("Can't purge, pullZoneId was not set.");
+      }
+      if (!accessKey) {
+        throw new Error("Can't upload, accessKey was not set.");
+      }
+      if (pullZoneId && accessKey) {
+        info(`Purging pull zone with the id ${pullZoneId}`);
+        await purge(pullZoneId, accessKey);
+      }
     }
   } catch (error) {
     setFailed(error as string | Error);

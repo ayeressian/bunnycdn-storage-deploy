@@ -6,7 +6,7 @@ import { info } from "@actions/core";
 const uploadFile = async (
   entry: readdirp.EntryInfo,
   storageName: string,
-  accessKey: string,
+  storagePassword: string,
   storageEndpoint: string
 ) => {
   const readStream = fs.createReadStream(entry.fullPath);
@@ -18,7 +18,7 @@ const uploadFile = async (
     {
       method: "PUT",
       headers: {
-        AccessKey: accessKey,
+        AccessKey: storagePassword,
       },
       body: readStream,
     }
@@ -37,10 +37,10 @@ const uploadFile = async (
 export default async function run(
   path: string,
   storageName: string,
-  accessKey: string,
+  storagePassword: string,
   storageEndpoint: string
 ): Promise<void> {
   for await (const entry of readdirp(path)) {
-    await uploadFile(entry, storageName, accessKey, storageEndpoint);
+    await uploadFile(entry, storageName, storagePassword, storageEndpoint);
   }
 }
