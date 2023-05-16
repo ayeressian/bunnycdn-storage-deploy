@@ -9,13 +9,11 @@ inputs:
     required: true
   storagePassword:
     description: "The storage password. It should be read and write capable."
-    required: true
   storageEndpoint:
     description: "The storage endpoint"
     default: "storage.bunnycdn.com"
   accessKey:
     description: "The API key."
-    required: true  
   pullZoneId:
     description: "Is required for purging."
   purge:

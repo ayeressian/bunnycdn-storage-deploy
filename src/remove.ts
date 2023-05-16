@@ -3,7 +3,7 @@ import fetch, { Response } from "node-fetch";
 
 const remove = async (
   storageName: string,
-  accessKey: string,
+  storagePassword: string,
   storageEndpoint: string
 ): Promise<Response> => {
   const url = `https://${storageEndpoint}/${storageName}/`;
@@ -11,7 +11,7 @@ const remove = async (
   const response = await fetch(url, {
     method: "DELETE",
     headers: {
-      AccessKey: accessKey,
+      AccessKey: storagePassword,
     },
   });
   // THERE IS A BUG IN API 400 IS VALID SOMETIMES
