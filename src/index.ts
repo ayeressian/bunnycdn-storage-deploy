@@ -17,7 +17,7 @@ const run = async () => {
     const accessKey = getInput("accessKey");
     const pullZoneId = getInput("pullZoneId");
 
-    const purgePullZoneFlag = getInput("purgePullZone");
+    const purgePullZoneFlag = getInput("purge");
     const removeFlag = getInput("remove");
     const uploadFlag = getInput("upload");
 
