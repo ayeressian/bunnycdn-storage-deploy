@@ -16,7 +16,7 @@ inputs:
     description: "The API key."
   pullZoneId:
     description: "Is required for purging."
-  purge:
+  purgePullZone:
     description: "It will purge the pull zone if true. pullZoneId and accessKey should be provided."
     default: "false"
   remove:

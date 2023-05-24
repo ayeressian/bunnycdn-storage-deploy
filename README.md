@@ -17,7 +17,7 @@ It will upload files and folders if "true" provided. source, storageZoneName and
 
 It will remove all the files from storage before uploading if "true" provided. storageZoneName and storagePassword inputs should be provided.
 
-### `purge`
+### `purgePullZone`
 
 It will purge the pull zone if "true" provided. pullZoneId and accessKey inputs should be provided.
 
@@ -58,5 +58,5 @@ Pull zone ID.
     pullZoneId: "${{ secrets.ZONE_ID }}"
     upload: "true"
     remove: "true"
-    purge: "true"
+    purgePullZone: "true"
 ```
