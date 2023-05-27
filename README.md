@@ -49,7 +49,7 @@ Pull zone ID.
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v=2.0.1
+  uses: ayeressian/bunnycdn-storage-deploy@v2.0.2
   with:
     source: "dist"
     storageZoneName: "${{ secrets.STORAGE_NAME }}"

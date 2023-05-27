@@ -6,9 +6,10 @@ import remove from "./remove";
 
 const run = async () => {
   try {
-    const source = isAbsolute(getInput("source")) ? getInput("source") : join(
+    const sourceRaw = getInput("source");
+    const source = isAbsolute(sourceRaw) ? sourceRaw : join(
       process.env.GITHUB_WORKSPACE as string,
-      getInput("source")
+      sourceRaw
     );
     const storageZoneName = getInput("storageZoneName");
     const storageEndpoint =
