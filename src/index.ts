@@ -1,14 +1,15 @@
 import { getInput, setFailed, info } from "@actions/core";
-import { join } from "path";
+import { join, isAbsolute } from "path";
 import uploader from "./uploader";
 import purge from "./purge";
 import remove from "./remove";
 
 const run = async () => {
   try {
-    const source = join(
+    const sourceRaw = getInput("source");
+    const source = isAbsolute(sourceRaw) ? sourceRaw : join(
       process.env.GITHUB_WORKSPACE as string,
-      getInput("source")
+      sourceRaw
     );
     const storageZoneName = getInput("storageZoneName");
     const storageEndpoint =
