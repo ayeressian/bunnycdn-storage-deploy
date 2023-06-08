@@ -25,7 +25,7 @@ const uploadFile = async (
   );
 
   if (response.status === 201) {
-    info(`Successfull deployment of ${entry.path}.`);
+    info(`Successful deployment of ${entry.path}.`);
   } else {
     throw new Error(
       `Uploading ${entry.path} has failed width status code ${response.status}.`
