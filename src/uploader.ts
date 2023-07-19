@@ -40,7 +40,15 @@ export default async function run(
   storagePassword: string,
   storageEndpoint: string
 ): Promise<void> {
+  const uploadFilePromises = [];
   for await (const entry of readdirp(path)) {
-    await uploadFile(entry, storageName, storagePassword, storageEndpoint);
+    const uploadFilePromise = uploadFile(
+      entry,
+      storageName,
+      storagePassword,
+      storageEndpoint
+    );
+    uploadFilePromises.push(uploadFilePromise);
   }
+  await Promise.all(uploadFilePromises);
 }

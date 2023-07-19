@@ -7,10 +7,9 @@ import remove from "./remove";
 const run = async () => {
   try {
     const sourceRaw = getInput("source");
-    const source = isAbsolute(sourceRaw) ? sourceRaw : join(
-      process.env.GITHUB_WORKSPACE as string,
-      sourceRaw
-    );
+    const source = isAbsolute(sourceRaw)
+      ? sourceRaw
+      : join(process.env.GITHUB_WORKSPACE as string, sourceRaw);
     const storageZoneName = getInput("storageZoneName");
     const storageEndpoint =
       getInput("storageEndpoint") ?? "storage.bunnycdn.com";
