@@ -1,6 +1,9 @@
 name: "BunnyCDN storage deployer"
 description: "BunnyCDN storage deployer"
 inputs:
+  upload:
+    description: "It will upload the files to storage if 'true' provided."
+    default: "false"
   source:
     description: "The source directory folder."
     required: true
