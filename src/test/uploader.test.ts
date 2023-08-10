@@ -1,29 +1,101 @@
-import { resolve } from "path";
-const fetchMock = jest.fn(() => Promise.resolve({ status: 201 }));
-jest.mock("node-fetch", () => fetchMock);
+import Uploader from "../uploader";
+import readdirp, { ReaddirpStream } from "readdirp";
+import { beforeEach, describe, it, vi, expect } from "vitest";
+import got from "got";
+import fs, { ReadStream } from "fs";
+import PQueue from "p-queue";
 
-import uploader from "../uploader";
+const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
-describe("when uploading a directory with 3 files", () => {
-  it("should call fetch api 3 times with correct arguments", async () => {
-    await uploader(
-      resolve("src/test/test-upload-dir"),
-      "storageName",
-      "key",
-      "storage.bunnycdn.com"
+const createPromises = (num = 1) => {
+  const promises: Promise<unknown>[] = [];
+  const promiseResolves: ((value: unknown) => void)[] = [];
+  const promiseRejects: ((value: unknown) => void)[] = [];
+  for (let i = 0; i < num; ++i) {
+    const promise = new Promise((resolve, reject) => {
+      promiseResolves.push(resolve);
+      promiseRejects.push(reject);
+    });
+    promises.push(promise);
+  }
+  return { promises, promiseResolves, promiseRejects };
+};
+
+describe("Uploader", () => {
+  describe("run method", () => {
+    let runMethod: () => Promise<void>;
+    beforeEach(() => {
+      runMethod = Uploader.prototype.run;
+      vi.mock("readdirp");
+      const readdirpMock = vi.mocked(readdirp);
+      readdirpMock.mockReturnValue({
+        async *[Symbol.asyncIterator]() {
+          for (let i = 0; i < 3; ++i) {
+            yield {
+              basename: `basename${i}`,
+              path: `${i}`,
+              fullPath: `full${i}`,
+            };
+          }
+        },
+      } as ReaddirpStream);
+    });
+
+    it("should call uploadFile correct number of times", async () => {
+      const uploadFileMock = vi.fn((): Promise<void> => Promise.resolve());
+      await runMethod.call({
+        uploadFile: uploadFileMock,
+        path: "src/test/test-upload-dir",
+        queue: new PQueue({ concurrency: 3 }),
+      });
+      expect(uploadFileMock).toHaveBeenCalledTimes(3);
+    });
+
+    it("should wait for queue to become idle", async () => {
+      const { promises, promiseResolves } = createPromises(3);
+      const uploadFileMock = vi.fn();
+      uploadFileMock.mockImplementationOnce(() => promises[0]);
+      uploadFileMock.mockImplementationOnce(() => promises[1]);
+      uploadFileMock.mockImplementationOnce(() => promises[2]);
+      const queue = new PQueue({ concurrency: 3 });
+      runMethod.call({
+        uploadFile: uploadFileMock,
+        path: "src/test/test-upload-dir",
+        queue,
+      });
+      await timer();
+      expect(queue.pending + queue.size).toBe(3);
+      promiseResolves.forEach((resolve) => resolve(null));
+      await timer();
+      expect(queue.pending + queue.size).toBe(0);
+    });
+  });
+
+  describe("uploadFile method", () => {
+    let uploadFileMethod: (entry: readdirp.EntryInfo) => Promise<void>;
+    const createReadStreamMock = vi.spyOn(fs, "createReadStream");
+    createReadStreamMock.mockReturnValue(null as unknown as ReadStream);
+    vi.mock("got");
+    const gotMock = vi.mocked(got);
+    gotMock.mockReturnValue(
+      Promise.resolve({ statusCode: 201 }) as got.GotPromise<Buffer>
     );
-    expect(fetchMock).toHaveBeenCalledWith(
-      "https://storage.bunnycdn.com/storageName/test.txt",
-      expect.anything()
-    );
-    expect(fetchMock).toHaveBeenCalledWith(
-      "https://storage.bunnycdn.com/storageName/test2.txt",
-      expect.anything()
-    );
-    expect(fetchMock).toHaveBeenCalledWith(
-      "https://storage.bunnycdn.com/storageName/nestd/test3.txt",
-      expect.anything()
-    );
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    vi.mock("@actions/core", () => ({
+      info: () => null,
+    }));
+    beforeEach(() => {
+      uploadFileMethod = (Uploader as any).prototype.uploadFile;
+    });
+    it("should make fetch request", async () => {
+      await uploadFileMethod.call(
+        {
+          storageEndpoint: "test",
+          storageName: "test",
+          storagePassword: "test",
+        },
+        { path: "Test", fullPath: "Test", basename: "Test" }
+      );
+      expect(gotMock).toHaveBeenCalled();
+    });
   });
 });

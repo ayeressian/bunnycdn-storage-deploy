@@ -1,54 +1,51 @@
 import fs from "fs";
-import fetch from "node-fetch";
 import readdirp from "readdirp";
 import { info } from "@actions/core";
+import PQueue from "p-queue";
+import got from "got";
 
-const uploadFile = async (
-  entry: readdirp.EntryInfo,
-  storageName: string,
-  storagePassword: string,
-  storageEndpoint: string
-) => {
-  const readStream = fs.createReadStream(entry.fullPath);
-  info(
-    `Deploying ${entry.path} by https://${storageEndpoint}/${storageName}/${entry.path}`
-  );
-  const response = await fetch(
-    `https://${storageEndpoint}/${storageName}/${entry.path}`,
-    {
-      method: "PUT",
-      headers: {
-        AccessKey: storagePassword,
-      },
-      body: readStream,
+const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
+
+export default class Uploader {
+  queue: PQueue;
+  constructor(
+    private path: string,
+    private storageName: string,
+    private storagePassword: string,
+    private storageEndpoint: string
+  ) {
+    this.queue = new PQueue({ concurrency: NUM_OF_CONCURRENT_REQ });
+  }
+
+  private async uploadFile(entry: readdirp.EntryInfo) {
+    const readStream = fs.createReadStream(entry.fullPath);
+    info(
+      `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${entry.path}`
+    );
+    const response = await got(
+      `https://${this.storageEndpoint}/${this.storageName}/${entry.path}`,
+      {
+        method: "PUT",
+        headers: {
+          AccessKey: this.storagePassword,
+        },
+        body: readStream,
+      }
+    );
+    if (response.statusCode === 201) {
+      info(`Successful deployment of ${entry.path}.`);
+    } else {
+      throw new Error(
+        `Uploading ${entry.path} has failed width status code ${response.statusCode}.`
+      );
     }
-  );
-
-  if (response.status === 201) {
-    info(`Successful deployment of ${entry.path}.`);
-  } else {
-    throw new Error(
-      `Uploading ${entry.path} has failed width status code ${response.status}.`
-    );
+    return response;
   }
-  return response;
-};
 
-export default async function run(
-  path: string,
-  storageName: string,
-  storagePassword: string,
-  storageEndpoint: string
-): Promise<void> {
-  const uploadFilePromises = [];
-  for await (const entry of readdirp(path)) {
-    const uploadFilePromise = uploadFile(
-      entry,
-      storageName,
-      storagePassword,
-      storageEndpoint
-    );
-    uploadFilePromises.push(uploadFilePromise);
+  async run() {
+    for await (const entry of readdirp(this.path)) {
+      this.queue.add(() => this.uploadFile(entry));
+    }
+    await this.queue.onIdle();
   }
-  await Promise.all(uploadFilePromises);
 }
