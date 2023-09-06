@@ -21,7 +21,6 @@ class Main {
 
   constructor() {
     this.params = this.getParams();
-    console.log(this.params);
   }
 
   async run() {
@@ -110,5 +109,5 @@ class Main {
     }
   }
 }
-console.log("TTTT22");
+
 new Main().run();
