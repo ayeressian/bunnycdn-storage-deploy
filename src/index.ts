@@ -21,6 +21,7 @@ class Main {
 
   constructor() {
     this.params = this.getParams();
+    console.log(this.params);
   }
 
   async run() {
@@ -47,8 +48,8 @@ class Main {
       uploadFlag: getInput("upload"),
     };
     result.source = isAbsolute(result.source)
-      ? this.params.source
-      : join(process.env.GITHUB_WORKSPACE as string, this.params.source);
+      ? result.source
+      : join(process.env.GITHUB_WORKSPACE as string, result.source);
     return result;
   }
 
@@ -109,5 +110,5 @@ class Main {
     }
   }
 }
-
+console.log("TTTT22");
 new Main().run();
