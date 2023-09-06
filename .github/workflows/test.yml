@@ -22,4 +22,4 @@ jobs:
           pullZoneId: "${{ secrets.ZONE_ID_TEST }}"
           upload: "true"
           remove: "true"
-          purge: "true"
+          purgePullZone: "true"
