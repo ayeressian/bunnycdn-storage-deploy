@@ -11,9 +11,9 @@ const purge = async (pullZoneId: string, accessKey: string) => {
       },
       "axios-retry": {
         onRetry: (retryCount, error) => {
-          info(
-            `Purging failed with the status code ${error.status}. Retrying...`
-          );
+          info("Purging failed");
+          info(error.message);
+          info("Retrying...");
         },
       },
     }

@@ -31,9 +31,9 @@ export default class Uploader {
         },
         "axios-retry": {
           onRetry: (retryCount, error) => {
-            info(
-              `Uploading ${entry.path} has failed width status code ${error.status}. Retrying...`
-            );
+            info(`Uploading ${entry.path} has failed`);
+            info(error.message);
+            info("Retrying...");
           },
         },
       }
