@@ -1,7 +1,7 @@
 import Uploader from "../uploader";
 import readdirp, { ReaddirpStream } from "readdirp";
 import { beforeEach, describe, it, vi, expect } from "vitest";
-import got from "got";
+import axios from "../axios-retry";
 import fs, { ReadStream } from "fs";
 import PQueue from "p-queue";
 
@@ -75,11 +75,14 @@ describe("Uploader", () => {
     let uploadFileMethod: (entry: readdirp.EntryInfo) => Promise<void>;
     const createReadStreamMock = vi.spyOn(fs, "createReadStream");
     createReadStreamMock.mockReturnValue(null as unknown as ReadStream);
-    vi.mock("got");
-    const gotMock = vi.mocked(got);
-    gotMock.mockReturnValue(
-      Promise.resolve({ statusCode: 201 }) as got.GotPromise<Buffer>
-    );
+
+    vi.mock("../axios-retry", () => {
+      return {
+        default: {
+          put: vi.fn(() => Promise.resolve({ status: 201 })),
+        },
+      };
+    });
     vi.mock("@actions/core", () => ({
       info: () => null,
     }));
@@ -95,7 +98,8 @@ describe("Uploader", () => {
         },
         { path: "Test", fullPath: "Test", basename: "Test" }
       );
-      expect(gotMock).toHaveBeenCalled();
+      const axiosMock = vi.mocked(axios);
+      expect(axiosMock.put).toHaveBeenCalled();
     });
   });
 });

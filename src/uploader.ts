@@ -2,7 +2,7 @@ import fs from "fs";
 import readdirp from "readdirp";
 import { info } from "@actions/core";
 import PQueue from "p-queue";
-import got from "got";
+import axios from "./axios-retry";
 
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
 
@@ -22,21 +22,27 @@ export default class Uploader {
     info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${entry.path}`
     );
-    const response = await got(
+    const response = await axios.put(
       `https://${this.storageEndpoint}/${this.storageName}/${entry.path}`,
+      readStream,
       {
-        method: "PUT",
         headers: {
           AccessKey: this.storagePassword,
         },
-        body: readStream,
+        "axios-retry": {
+          onRetry: (retryCount, error) => {
+            info(
+              `Uploading ${entry.path} has failed width status code ${error.status}. Retrying...`
+            );
+          },
+        },
       }
     );
-    if (response.statusCode === 201) {
+    if (response.status === 201) {
       info(`Successful deployment of ${entry.path}.`);
     } else {
       throw new Error(
-        `Uploading ${entry.path} has failed width status code ${response.statusCode}.`
+        `Uploading ${entry.path} has failed width status code ${response.status}.`
       );
     }
     return response;

@@ -1,19 +1,22 @@
 import { describe, it, vi, expect } from "vitest";
-import got from "got";
+import axios from "../axios-retry";
 import remove from "../remove";
 
 describe("when calling remove function", () => {
   it("should call remove API", async () => {
-    vi.mock("got");
-    const gotMock = vi.mocked(got);
-    gotMock.mockReturnValue(
-      Promise.resolve({ statusCode: 200 }) as got.GotPromise<Buffer>
-    );
+    vi.mock("../axios-retry", () => {
+      return {
+        default: {
+          delete: vi.fn(() => Promise.resolve({ status: 200 })),
+        },
+      };
+    });
+    const axiosMock = vi.mocked(axios);
     await remove("storageName", "key", "storage.bunnycdn.com");
-    expect(gotMock).toHaveBeenCalledWith(
+    expect(axiosMock.delete).toHaveBeenCalledWith(
       "https://storage.bunnycdn.com/storageName/",
       expect.anything()
     );
-    expect(gotMock).toHaveBeenCalledTimes(1);
+    expect(axiosMock.delete).toHaveBeenCalledTimes(1);
   });
 });
