@@ -32,7 +32,7 @@ const remove = async (
   // THERE IS A BUG IN API 400 IS VALID SOMETIMES
   if (response.status !== 200 && response.status !== 400) {
     throw new Error(
-      `Removing storage data failed with the status code ${response.status}.`
+      `Removing storage data failed with the status code ${response.status}....`
     );
   }
   info("Storage data successfully removed.");
