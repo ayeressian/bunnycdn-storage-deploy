@@ -1,8 +1,8 @@
 import fs from "fs";
+import fetch from "node-fetch";
 import readdirp from "readdirp";
 import { info } from "@actions/core";
 import PQueue from "p-queue";
-import axios from "./axios-retry";
 
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
 
@@ -22,20 +22,14 @@ export default class Uploader {
     info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${entry.path}`
     );
-    const response = await axios.put(
+    const response = await fetch(
       `https://${this.storageEndpoint}/${this.storageName}/${entry.path}`,
-      readStream,
       {
+        method: "PUT",
         headers: {
           AccessKey: this.storagePassword,
         },
-        "axios-retry": {
-          onRetry: (retryCount, error) => {
-            info(`Uploading ${entry.path} has failed`);
-            info(error.message);
-            info("Retrying...");
-          },
-        },
+        body: readStream,
       }
     );
     if (response.status === 201) {

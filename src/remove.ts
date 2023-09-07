@@ -1,5 +1,5 @@
 import { info } from "@actions/core";
-import axios from "./axios-retry";
+import fetch from "node-fetch";
 
 const remove = async (
   storageName: string,
@@ -8,31 +8,16 @@ const remove = async (
 ) => {
   const url = `https://${storageEndpoint}/${storageName}/`;
   info(`Removing storage data with ${url}`);
-  const response = await axios
-    .delete(url, {
-      headers: {
-        AccessKey: storagePassword,
-      },
-      "axios-retry": {
-        onRetry: (retryCount, error) => {
-          info("Removing storage data failed.");
-          info(error.message);
-          info("Retrying...");
-        },
-      },
-    })
-    .catch((error) => {
-      if (error?.response.status === 400) {
-        return error;
-      }
-      info("TTTTTTT");
-      info(JSON.stringify(error));
-      throw error;
-    });
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      AccessKey: storagePassword,
+    },
+  });
   // THERE IS A BUG IN API 400 IS VALID SOMETIMES
   if (response.status !== 200 && response.status !== 400) {
     throw new Error(
-      `Removing storage data failed with the status code ${response.status}....`
+      `Removing storage data failed with the status code ${response.status}.`
     );
   }
   info("Storage data successfully removed.");

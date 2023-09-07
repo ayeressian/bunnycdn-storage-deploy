@@ -1,20 +1,13 @@
+import fetch from "node-fetch";
 import { info } from "@actions/core";
-import axios from "./axios-retry";
 
 const purge = async (pullZoneId: string, accessKey: string) => {
-  const response = await axios.post(
+  const response = await fetch(
     `https://api.bunny.net/pullzone/${pullZoneId}/purgeCache`,
-    null,
     {
+      method: "POST",
       headers: {
         AccessKey: accessKey,
-      },
-      "axios-retry": {
-        onRetry: (retryCount, error) => {
-          info("Purging failed");
-          info(error.message);
-          info("Retrying...");
-        },
       },
     }
   );

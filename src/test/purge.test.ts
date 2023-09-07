@@ -1,23 +1,17 @@
 import { describe, it, vi, expect } from "vitest";
+import nodeFetch, { Response } from "node-fetch";
 import purge from "../purge";
-import axios from "../axios-retry";
 
 describe("when calling purge function", () => {
   it("should call purge API", async () => {
-    vi.mock("../axios-retry", () => {
-      return {
-        default: {
-          post: vi.fn(() => Promise.resolve({ status: 204 })),
-        },
-      };
-    });
-    const axiosMock = vi.mocked(axios);
+    vi.mock("node-fetch");
+    const fetchMock = vi.mocked(nodeFetch);
+    fetchMock.mockReturnValue(Promise.resolve({ status: 204 } as Response));
     await purge("zoneId", "zoneKey");
-    expect(axiosMock.post).toHaveBeenCalledWith(
+    expect(fetchMock).toHaveBeenCalledWith(
       "https://api.bunny.net/pullzone/zoneId/purgeCache",
-      null,
       expect.anything()
     );
-    expect(axiosMock.post).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });

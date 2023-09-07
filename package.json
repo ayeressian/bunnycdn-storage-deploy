@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "vitest",
     "build": "webpack",
     "build-watch": "webpack --watch"
   },
@@ -27,8 +27,7 @@
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
     "@types/got": "^9.6.12",
-    "axios": "^1.5.0",
-    "axios-retry": "^3.7.0",
+    "node-fetch": "^3.3.2",
     "p-queue": "^7.4.1",
     "readdirp": "^3.6.0"
   },
