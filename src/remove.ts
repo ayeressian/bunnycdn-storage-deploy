@@ -25,7 +25,7 @@ const remove = async (
       if (error?.response.status === 400) {
         return error;
       }
-      info("TTTT");
+      info("TTTTTTT");
       info(JSON.stringify(error));
       throw error;
     });
