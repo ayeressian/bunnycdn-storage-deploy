@@ -2,8 +2,8 @@ import { info } from "@actions/core";
 import fetch from "node-fetch";
 
 const remove = async (
-  storageName: string,
   destination: string,
+  storageName: string,
   storagePassword: string,
   storageEndpoint: string
 ) => {

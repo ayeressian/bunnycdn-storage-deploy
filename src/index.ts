@@ -64,6 +64,7 @@ class Main {
       }
       info(`Deleting files from storage ${this.params.storageZoneName}`);
       await remove(
+        this.params.destination,
         this.params.storageZoneName,
         this.params.storagePassword,
         this.params.storageEndpoint
