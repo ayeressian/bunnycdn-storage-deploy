@@ -3,10 +3,12 @@ import fetch from "node-fetch";
 
 const remove = async (
   storageName: string,
+  destination: string,
   storagePassword: string,
   storageEndpoint: string
 ) => {
-  const url = `https://${storageEndpoint}/${storageName}/`;
+  const _destination = destination ? `${destination}/` : "";
+  const url = `https://${storageEndpoint}/${storageName}/${_destination}`;
   info(`Removing storage data with ${url}`);
   const response = await fetch(url, {
     method: "DELETE",

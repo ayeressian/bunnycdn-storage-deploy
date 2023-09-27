@@ -25,6 +25,11 @@ It will purge the pull zone if "true" provided. pullZoneId and accessKey inputs 
 
 The source directory that should be uploaded.
 
+### `destination`
+
+The destination directory that should be uploaded too in the bunny storage zone. (Example: www).
+The destination should not end with `/` as in `www/`.
+
 ### `storageZoneName`
 
 The name of storage zone where you are connecting to.
@@ -52,6 +57,7 @@ Pull zone ID.
   uses: ayeressian/bunnycdn-storage-deploy@v2.1.1
   with:
     source: "dist"
+    destination: "www"
     storageZoneName: "${{ secrets.STORAGE_NAME }}"
     storagePassword: "${{ secrets.STORAGE_PASSWORD }}"
     accessKey: "${{ secrets.STORAGE_KEY }}"
