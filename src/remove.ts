@@ -16,13 +16,17 @@ const remove = async (
       AccessKey: storagePassword,
     },
   });
-  // THERE IS A BUG IN API 400 IS VALID SOMETIMES
-  if (response.status !== 200 && response.status !== 400) {
+
+  if (response.status === 404) {
+    info(`Destination not found: ${storageName}/${_destination}`);
+  } else if (response.status !== 200 && response.status !== 400) {
+    // THERE IS A BUG IN API 400 IS VALID SOMETIMES
     throw new Error(
       `Removing storage data failed with the status code ${response.status}.`
     );
+  } else {
+    info("Storage data successfully removed.");
   }
-  info("Storage data successfully removed.");
 };
 
 export default remove;
