@@ -106,12 +106,43 @@ class Main {
         if (zonesToBeDeleted.length === 0) {
           info("No storage zones to be deleted");
         } else {
-          info("Deleting storage zones...");
-          zonesToBeDeleted.forEach((item) => {
+          if (!this.params.dryMode) {
+            info("Deleting storage zones...");
+          } else {
             info(
-              `- (${item.Id}) Storage zone ${item.Name} with DateModified ${item.DateModified}`
+              "Dry mode enabled, not deleting storage zones. The following would have been deleted:"
             );
-          });
+          }
+          const zonesToBeDeletedPromises = zonesToBeDeleted.map(
+            (item) =>
+              new Promise<void>((resolve, reject) => {
+                info(
+                  `- (${item.Id}) Storage zone ${item.Name} with DateModified ${item.DateModified}`
+                );
+
+                if (this.params.dryMode) {
+                  resolve();
+                }
+                const url = `https://api.bunny.net/storagezone/${item.Id}`;
+                const options = {
+                  method: "DELETE",
+                  headers: {
+                    AccessKey: this.params.accessKey,
+                  },
+                };
+                return fetch(url, options).then((res) => {
+                  if (res.status !== 204) {
+                    reject(
+                      new Error(
+                        `Failed deleting storage zones with status code: ${status}.`
+                      )
+                    );
+                  }
+                  resolve();
+                });
+              })
+          );
+          await Promise.all(zonesToBeDeletedPromises);
         }
       }
     }
