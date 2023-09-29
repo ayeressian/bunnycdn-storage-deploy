@@ -27,7 +27,7 @@ class Main {
     const result = {
       startsWith: getInput("startsWith"),
       keepLast: parseInt(getInput("keepLast"), 10),
-      dryMode: getInput("dryMode") === "true",
+      dryMode: getInput("dryMode").toLowerCase() == "true",
       accessKey: getInput("accessKey"),
     };
 
@@ -121,7 +121,7 @@ class Main {
                 );
 
                 if (this.params.dryMode) {
-                  resolve();
+                  return resolve();
                 }
                 const url = `https://api.bunny.net/storagezone/${item.Id}`;
                 const options = {
