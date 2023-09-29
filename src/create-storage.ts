@@ -82,6 +82,9 @@ class Main {
       ])
     );
     if (status !== 201) {
+      if (status === 400) {
+        info(`Status 400: ${JSON.stringify(data)}`);
+      }
       throw new Error(`Creating failed with the status code ${status}.`);
     }
     info(
