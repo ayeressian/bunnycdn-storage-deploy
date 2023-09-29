@@ -123,3 +123,28 @@ Github actions that can purge a pull zone.
     pullZoneId: "${{ secrets.ZONE_ID }}"
     accessKey: "${{ secrets.STORAGE_KEY }}"
 ```
+
+## Purge a pull zone
+
+Github actions that can purge a pull zone.
+
+### Inputs
+
+| Name | Description |
+| --- | --- |
+| `startsWith` | The name the storage zones should start with. |
+| `keepLast` | The number of storage zones to keep. |
+| `dryMode` | If dry mode is true no storage zones will be deleted. Good for testing.  |
+| `accessKey` | The API key. |
+
+### Example usage
+
+```
+- name: Remove old storage zones
+  uses: ayeressian/bunnycdn-storage-deploy/removeOldStorageZones@v2.1.1
+  with:
+    startsWith: production-www-v
+    keepLast: 3
+    dryMode: true
+    accessKey: "${{ secrets.STORAGE_KEY }}"
+```

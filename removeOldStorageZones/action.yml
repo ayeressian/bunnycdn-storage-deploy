@@ -1,0 +1,25 @@
+name: "BunnyCDN Remove old storage zones"
+description: "Github actions that can remove old storage zones with a given pattern."
+
+inputs:
+  startsWith:
+    description: "Filter all storage zones that start with this string."
+    required: true
+  keepLast:
+    description: "Number of storage zones to keep."
+    required: true
+  dryMode:
+    description: "If true, no storage zones will be deleted."
+    required: true
+    type: boolean
+  accessKey:
+    description: "The API key."
+    required: true
+    type: string
+
+runs:
+  using: "node16"
+  main: "../dist/remove-old-storage-zones.js"
+branding:
+  icon: "upload-cloud"
+  color: "orange"
