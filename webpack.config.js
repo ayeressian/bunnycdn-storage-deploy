@@ -7,6 +7,7 @@ module.exports = {
     index: "./src/index.ts",
     "create-storage": "./src/create-storage.ts",
     "pull-zone-change-storage": "./src/pull-zone-change-storage.ts",
+    "run-purge": "./src/run-purge.ts",
   },
   devtool: "source-map",
   mode: NODE_ENV,

@@ -80,7 +80,7 @@ This actions creates a bunny storage
 
 The output can be used in the next job using: ${{ steps.createStorage.outputs.storageZonePassword }}
 
-## Update storage zone on pull zone 
+## Update storage zone for a pull zone 
 
 Github actions that can update an existing pull zone to use a different storage zone.
 
@@ -95,11 +95,31 @@ Github actions that can update an existing pull zone to use a different storage 
 ### Example usage
 
 ```
-- name: Create storage in BunnyCDN
-  id: createStorage
+- name: Update storage zone for a pull zone 
   uses: ayeressian/bunnycdn-storage-deploy/pullZoneChangeStorage@v2.1.1
   with:
     pullZoneId: "${{ secrets.ZONE_ID }}"
     storageZoneId: "${{ steps.createStorage.outputs.storageZoneId }}"
+    accessKey: "${{ secrets.STORAGE_KEY }}"
+```
+
+## Purge a pull zone
+
+Github actions that can purge a pull zone.
+
+### Inputs
+
+| Name | Description |
+| --- | --- |
+| `pullZoneId` | The pull zone id. |
+| `accessKey` | The API key. |
+
+### Example usage
+
+```
+- name: Purge the pull zone 
+  uses: ayeressian/bunnycdn-storage-deploy/purge@v2.1.1
+  with:
+    pullZoneId: "${{ secrets.ZONE_ID }}"
     accessKey: "${{ secrets.STORAGE_KEY }}"
 ```

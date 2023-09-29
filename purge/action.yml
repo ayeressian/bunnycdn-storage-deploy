@@ -1,0 +1,19 @@
+name: "BunnyCDN purge a pull zone"
+description: "Github actions that can purge a pull zone."
+
+inputs:
+  pullZoneId:
+    description: "The pull zone id."
+    required: true
+  accessKey:
+    description: "The API key."
+    required: true
+    type: string
+
+runs:
+  using: "node16"
+  main: "../dist/run-purge.js"
+branding:
+  icon: "upload-cloud"
+  color: "orange"
+

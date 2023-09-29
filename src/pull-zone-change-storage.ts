@@ -56,6 +56,7 @@ class Main {
       },
       body: JSON.stringify({
         StorageZoneId: this.params.storageZoneId,
+        OriginType: 2,
       }),
     };
 
@@ -71,9 +72,7 @@ class Main {
       }
       throw new Error(`Creating failed with the status code ${status}.`);
     }
-    info(
-      `Storage zone successfully created. Here is the id: ${data.Id} and password: ${data.Password}`
-    );
+    info(`Pull zone updated`);
   }
 }
 
