@@ -1,4 +1,5 @@
 import { getInput, setOutput, setFailed, info } from "@actions/core";
+import fetch from "node-fetch";
 
 type Params = {
   name: string;
@@ -74,16 +75,21 @@ class Main {
       }),
     };
 
-    const res = await fetch(url, options).then((res) => res.json());
-    if (res.status !== 201) {
-      throw new Error(`Creating failed with the status code ${res.status}.`);
+    const [status, data] = await fetch(url, options).then((res) =>
+      Promise.all([
+        res.status,
+        res.json() as Promise<{ Id: string; Name: string; Password: string }>,
+      ])
+    );
+    if (status !== 201) {
+      throw new Error(`Creating failed with the status code ${status}.`);
     }
     info(
-      `Storage zone successfully created. Here is the id: ${res.data.Id} and password: ${res.data.Password}`
+      `Storage zone successfully created. Here is the id: ${data.Id} and password: ${data.Password}`
     );
-    setOutput("storageZoneName", res.data.Name);
-    setOutput("storageZoneId", res.data.Id);
-    setOutput("storageZonePassword", res.data.Password);
+    setOutput("storageZoneName", data.Name);
+    setOutput("storageZoneId", data.Id);
+    setOutput("storageZonePassword", data.Password);
   }
 }
 
