@@ -32,10 +32,10 @@ inputs:
     type: string
 
 outputs:
-  storageZoneName:
-    description: "The storage zone name."
   storageZoneId:
     description: "The storage zone id."
+  storageZoneName:
+    description: "The storage zone name."
   storageZonePassword:
     description: "The storage password. It should be read and write capable."
 
