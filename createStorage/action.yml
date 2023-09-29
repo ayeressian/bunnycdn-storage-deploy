@@ -41,7 +41,7 @@ outputs:
 
 runs:
   using: "node16"
-  main: "dist/create-storage.js"
+  main: "../dist/create-storage.js"
 branding:
   icon: "upload-cloud"
   color: "orange"
