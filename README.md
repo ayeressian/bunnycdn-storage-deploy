@@ -56,6 +56,13 @@ This actions creates a bunny storage
 | `zoneTier` | The zone tier (0 = Standard, 1 = Edge). |
 | `accessKey` | The API key. |
 
+### Outputs
+
+| Name | Description |
+| --- | --- |
+| `storageZoneId` | The storage zone id. |
+| `storageZoneName` | The storage zone name. |
+| `storageZonePassword` | The storage password. It should be read and write capable. |
 
 ### Example usage
 
