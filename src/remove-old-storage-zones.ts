@@ -84,10 +84,10 @@ class Main {
           .filter((item) => item.Name.startsWith(this.params.startsWith))
           .sort((a, b) => {
             if (a.DateModified < b.DateModified) {
-              return -1;
+              return 1;
             }
             if (a.DateModified > b.DateModified) {
-              return 1;
+              return -1;
             }
             return 0;
           });
@@ -102,13 +102,17 @@ class Main {
           );
         });
 
-        info("Deleting storage zones...");
         const zonesToBeDeleted = orderedItems.slice(this.params.keepLast);
-        zonesToBeDeleted.forEach((item) => {
-          info(
-            `- (${item.Id}) Storage zone ${item.Name} with DateModified ${item.DateModified}`
-          );
-        });
+        if (zonesToBeDeleted.length === 0) {
+          info("No storage zones to be deleted");
+        } else {
+          info("Deleting storage zones...");
+          zonesToBeDeleted.forEach((item) => {
+            info(
+              `- (${item.Id}) Storage zone ${item.Name} with DateModified ${item.DateModified}`
+            );
+          });
+        }
       }
     }
   }
