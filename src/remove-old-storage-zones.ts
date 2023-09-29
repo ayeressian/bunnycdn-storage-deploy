@@ -66,7 +66,7 @@ class Main {
         Promise.all([res.status, res.json() as Promise<{ Items: any[] }>])
       );
 
-      if (status !== 201) {
+      if (status !== 200) {
         if (status === 400) {
           info(`Status 400: ${JSON.stringify(data)}`);
         }
