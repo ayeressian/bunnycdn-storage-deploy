@@ -5,7 +5,7 @@ const { NODE_ENV = "production" } = process.env;
 module.exports = {
   entry: {
     index: "./src/index.ts",
-    createStorage: "./src/create-storage.ts",
+    "create-storage": "./src/create-storage.ts",
   },
   devtool: "source-map",
   mode: NODE_ENV,
