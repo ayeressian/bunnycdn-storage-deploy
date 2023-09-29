@@ -52,7 +52,7 @@ This actions creates a bunny storage
 | --- | --- |
 | `name` | The name of the storage zone. |
 | `region` | The code of the main storage zone region (Possible values: DE, NY, LA, SG). |
-| `replicationRegions` | The code of the main storage zone region (Possible values: DE, NY, LA, SG, SYD). Values should be separated by comma. |
+| `replicationRegions` | The code of the main storage zone region (Possible values: DE, NY, LA, SG, SYD). Values should be separated by comma. Take care not to include the region. |
 | `zoneTier` | The zone tier (0 = Standard, 1 = Edge). |
 | `accessKey` | The API key. |
 
@@ -69,7 +69,7 @@ This actions creates a bunny storage
 ```
 - name: Create storage in BunnyCDN
   id: createStorage
-  uses: ayeressian/bunnycdn-storage-deploy@v2.1.1
+  uses: ayeressian/bunnycdn-storage-deploy/createStorage@v2.1.1
   with:
     name: new-storage
     region: DE
@@ -79,3 +79,27 @@ This actions creates a bunny storage
 ```
 
 The output can be used in the next job using: ${{ steps.createStorage.outputs.storageZonePassword }}
+
+## Update storage zone on pull zone 
+
+Github actions that can update an existing pull zone to use a different storage zone.
+
+### Inputs
+
+| Name | Description |
+| --- | --- |
+| `pullZoneId` | The pull zone id. |
+| `storageZoneId` | The new storage zone id. |
+| `accessKey` | The API key. |
+
+### Example usage
+
+```
+- name: Create storage in BunnyCDN
+  id: createStorage
+  uses: ayeressian/bunnycdn-storage-deploy/pullZoneChangeStorage@v2.1.1
+  with:
+    pullZoneId: "${{ secrets.ZONE_ID }}"
+    storageZoneId: "${{ steps.createStorage.outputs.storageZoneId }}"
+    accessKey: "${{ secrets.STORAGE_KEY }}"
+```

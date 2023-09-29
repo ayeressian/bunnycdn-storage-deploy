@@ -69,8 +69,7 @@ class Main {
       },
       body: JSON.stringify({
         ZoneTier: this.params.zoneTier,
-        // Bunny API has a mistake in the documentation, it should be ReplicationZones, not ReplicationRegions
-        ReplicationZones: this.params.replicationRegions,
+        ReplicationRegions: this.params.replicationRegions,
         Name: this.params.name,
         Region: this.params.region,
       }),
