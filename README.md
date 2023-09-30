@@ -57,7 +57,7 @@ Pull zone ID.
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v2.1.1
+  uses: ayeressian/bunnycdn-storage-deploy@v2.2.0
   with:
     source: "dist"
     destination: "www"
