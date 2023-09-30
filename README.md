@@ -27,8 +27,11 @@ The source directory that should be uploaded.
 
 ### `destination`
 
-The destination directory that should be uploaded too in the bunny storage zone. (Example: www).
-The destination should not end with `/` as in `www/`.
+The destination directory that should be uploaded to in the bunny storage zone. (Example: www). The destination should *not* have a trailing / as in www/.
+
+If you want to upload files to a nested directory, you can specify the path to the directory in the destination parameter. For example, if you want to upload files to a directory called assets inside the www directory, you can set the destination parameter to www/assets.
+
+Note that the nested directory will be automatically created by the CDN if it does not already exist.
 
 ### `storageZoneName`
 
