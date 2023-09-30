@@ -12,20 +12,24 @@ Each operation can be activated with their respective upload, remove and purge f
 
 ### Inputs
 
+It will upload files and folders if "true" provided. source, storageZoneName and storagePassword inputs should be provided.
+
 | Name | Description |
 | --- | --- |
 | `upload` | It will upload files and folders if "true" provided. source, storageZoneName and storagePassword inputs should be provided. |
 | `remove` | It will remove all the files from storage before uploading if "true" provided. storageZoneName and storagePassword inputs should be provided. |
 | `purgePullZone` | It will purge the pull zone if "true" provided. pullZoneId and accessKey inputs should be provided. |
 | `source` | The source directory that should be uploaded. |
-| `destination` | The destination directory that should be uploaded too in the bunny storage zone. (Example: www). The destination should not end with `/` as in `www/`. |
+| `destination` | The destination directory that should be uploaded to in the bunny storage zone. (Example: www). The destination should *not* have a trailing / as in www/.
+
+If you want to upload files to a nested directory, you can specify the path to the directory in the destination parameter. For example, if you want to upload files to a directory called assets inside the www directory, you can set the destination parameter to www/assets.
+
+Note that the nested directory will be automatically created by the CDN if it does not already exist. |
 | `storageZoneName` | The name of storage zone where you are connecting to. |
 | `storageEndpoint` | The storage endpoint. Default value is storage.bunnycdn.com |
 | `storagePassword` | The storage password. It should be read and write capable. |
 | `accessKey` | The API key. |
 | `pullZoneId` | Pull zone ID. |
-
-### Example usage
 
 ```
 - name: Deploy to BunnyCDN
