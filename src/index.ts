@@ -6,6 +6,7 @@ import remove from "./remove";
 
 type Params = {
   source: string;
+  destination: string;
   storageZoneName: string;
   storageEndpoint: string;
   storagePassword: string;
@@ -36,6 +37,7 @@ class Main {
   private getParams(): Params {
     const result = {
       source: getInput("source"),
+      destination: getInput("destination"),
       storageZoneName: getInput("storageZoneName"),
       storageEndpoint: getInput("storageEndpoint") ?? "storage.bunnycdn.com",
       storagePassword: getInput("storagePassword"),
@@ -62,6 +64,7 @@ class Main {
       }
       info(`Deleting files from storage ${this.params.storageZoneName}`);
       await remove(
+        this.params.destination,
         this.params.storageZoneName,
         this.params.storagePassword,
         this.params.storageEndpoint
@@ -86,6 +89,7 @@ class Main {
         );
         await new Uploader(
           this.params.source,
+          this.params.destination,
           this.params.storageZoneName,
           this.params.storagePassword,
           this.params.storageEndpoint

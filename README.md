@@ -25,6 +25,14 @@ It will purge the pull zone if "true" provided. pullZoneId and accessKey inputs 
 
 The source directory that should be uploaded.
 
+### `destination`
+
+The destination directory that should be uploaded to in the bunny storage zone. (Example: www). The destination should *not* have a trailing / as in www/.
+
+If you want to upload files to a nested directory, you can specify the path to the directory in the destination parameter. For example, if you want to upload files to a directory called assets inside the www directory, you can set the destination parameter to www/assets.
+
+Note that the nested directory will be automatically created by the CDN if it does not already exist.
+
 ### `storageZoneName`
 
 The name of storage zone where you are connecting to.
@@ -52,6 +60,7 @@ Pull zone ID.
   uses: ayeressian/bunnycdn-storage-deploy@v2.1.1
   with:
     source: "dist"
+    destination: "www"
     storageZoneName: "${{ secrets.STORAGE_NAME }}"
     storagePassword: "${{ secrets.STORAGE_PASSWORD }}"
     accessKey: "${{ secrets.STORAGE_KEY }}"

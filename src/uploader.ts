@@ -10,6 +10,7 @@ export default class Uploader {
   queue: PQueue;
   constructor(
     private path: string,
+    private destination: string,
     private storageName: string,
     private storagePassword: string,
     private storageEndpoint: string
@@ -19,11 +20,14 @@ export default class Uploader {
 
   private async uploadFile(entry: readdirp.EntryInfo) {
     const readStream = fs.createReadStream(entry.fullPath);
+    const destination = this.destination
+      ? `${this.destination}/${entry.path}`
+      : entry.path;
     info(
-      `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${entry.path}`
+      `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
     );
     const response = await fetch(
-      `https://${this.storageEndpoint}/${this.storageName}/${entry.path}`,
+      `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
       {
         method: "PUT",
         headers: {
