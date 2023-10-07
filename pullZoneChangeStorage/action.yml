@@ -1,0 +1,22 @@
+name: "BunnyCDN change storage zone on pull zone"
+description: "Github actions that can update an existing pull zone to use a different storage zone."
+
+inputs:
+  pullZoneId:
+    description: "The pull zone id."
+    required: true
+  storageZoneId:
+    description: "The new storage zone id."
+    required: true
+  accessKey:
+    description: "The API key."
+    required: true
+    type: string
+
+runs:
+  using: "node16"
+  main: "../dist/pull-zone-change-storage.js"
+branding:
+  icon: "upload-cloud"
+  color: "orange"
+

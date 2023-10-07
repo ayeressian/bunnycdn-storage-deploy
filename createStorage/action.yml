@@ -1,0 +1,47 @@
+name: "BunnyCDN create storage zone"
+description: "Github actions that can automate creating storage zones in BunnyCDN."
+
+inputs:
+  name:
+    description: "The name of the storage zone"
+    required: true
+  region:
+    description: "The code of the main storage zone region (Possible values: DE, NY, LA, SG)"
+    default: DE
+    type: choice
+    options:
+    - DE
+    - NY
+    - LA
+    - SG
+  replicationRegions:
+    description: "The code of the main storage zone region (Possible values: DE, NY, LA, SG, SYD). Values should be separated by comma."
+    type: string
+    default: "DE"
+    required: false
+  zoneTier:
+    description: "The zone tier (0 = Standard, 1 = Edge)."
+    type: choice
+    default: 1
+    options:
+    - 1
+    - 2
+  accessKey:
+    description: "The API key."
+    required: true
+    type: string
+
+outputs:
+  storageZoneId:
+    description: "The storage zone id."
+  storageZoneName:
+    description: "The storage zone name."
+  storageZonePassword:
+    description: "The storage password. It should be read and write capable."
+
+runs:
+  using: "node16"
+  main: "../dist/create-storage.js"
+branding:
+  icon: "upload-cloud"
+  color: "orange"
