@@ -1,7 +1,15 @@
 # bunnycdn-storage-deploy
 
 
-## Storage-Deploy
+This repo contains 4 actions:
+
+1. Storage-Deploy - Which is handy for uploading and removing previous files.
+2. Storage Create - Which can create a new Bunny storage.
+3. Pull Zone Update - Which can update a Bunny pull zone to fetch data from a different storage zone.
+4. Pull Zone Purge - Which can purge a Bunny pull zone.
+5. Storage Remove - Which can delete similiar named storage zones only keeping the latest x number of storage zones.
+
+## 1. Storage-Deploy
 
 This action performs 3 operations.
 * Uploads files and folders to storage.
@@ -46,9 +54,9 @@ Note that the nested directory will be automatically created by the CDN if it do
     purgePullZone: "true"
 ```
 
-## Create storage
+## 2. Storage Create
 
-This actions creates a bunny storage
+This actions creates a new bunny storage zone. It also returns an output which can be used in other github actions.
 
 ### Inputs
 
@@ -84,7 +92,7 @@ This actions creates a bunny storage
 
 The output can be used in the next job using: ${{ steps.createStorage.outputs.storageZonePassword }}
 
-## Update storage zone for a pull zone 
+## 3. Pull Zone Update
 
 Github actions that can update an existing pull zone to use a different storage zone.
 
@@ -99,7 +107,7 @@ Github actions that can update an existing pull zone to use a different storage 
 ### Example usage
 
 ```
-- name: Update storage zone for a pull zone 
+- name: Update pull zone with a different storage zone
   uses: ayeressian/bunnycdn-storage-deploy/pullZoneChangeStorage@v2.1.1
   with:
     pullZoneId: "${{ secrets.ZONE_ID }}"
@@ -107,9 +115,9 @@ Github actions that can update an existing pull zone to use a different storage 
     accessKey: "${{ secrets.STORAGE_KEY }}"
 ```
 
-## Purge a pull zone
+## 4. Pull Zone Purge
 
-Github actions that can purge a pull zone.
+Github actions that can purge a Bunny pull zone.
 
 ### Inputs
 
@@ -128,9 +136,11 @@ Github actions that can purge a pull zone.
     accessKey: "${{ secrets.STORAGE_KEY }}"
 ```
 
-## Purge a pull zone
+## 5. Storage Remove
 
-Github actions that can purge a pull zone.
+Github actions that can remove old storage zones using a `startsWith` filter. Useful when creating a new storage zone for each new release. 
+
+Example: Having created 4 storage zones: `frontend-v1.0.0`, `frontend-v1.0.1`, `frontend-v1.0.2`, `frontend-v1.0.3`. This actions can be used to remove the two old releases by specifying the parameters startsWith=frontend-v and keepLast=2. 
 
 ### Inputs
 
