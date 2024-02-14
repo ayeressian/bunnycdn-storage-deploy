@@ -26,6 +26,7 @@ export default class Uploader {
     info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
     );
+    throw new Error("AAAAAAAAAAA");
     const response = await fetch(
       `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
       {

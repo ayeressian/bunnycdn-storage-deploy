@@ -13,7 +13,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - name: Deploy
-        uses: ayeressian/bunnycdn-storage-deploy@master
+        uses: ayeressian/bunnycdn-storage-deploy@test-failed-deploy
         with:
           source: "e2e/test-dir"
           storageZoneName: "${{ secrets.STORAGE_NAME_TEST }}"

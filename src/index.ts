@@ -1,4 +1,4 @@
-import { getInput, setFailed, info } from "@actions/core";
+import { getInput, setFailed, info, error } from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";
@@ -29,8 +29,9 @@ class Main {
       await this.remove();
       await this.upload();
       await this.purge();
-    } catch (error) {
-      setFailed(error as string | Error);
+    } catch (err) {
+      error(err as string | Error);
+      setFailed(err as string | Error);
     }
   }
 
