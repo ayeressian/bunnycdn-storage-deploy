@@ -104,7 +104,7 @@ class Main {
         throw new Error("Can't purge, pullZoneId was not set.");
       }
       if (!this.params.accessKey) {
-        throw new Error("Can't upload, accessKey was not set.");
+        throw new Error("Can't purge, accessKey was not set.");
       }
       if (this.params.pullZoneId && this.params.accessKey) {
         info(`Purging pull zone with the id ${this.params.pullZoneId}`);
