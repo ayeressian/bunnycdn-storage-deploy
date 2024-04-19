@@ -1,9 +1,10 @@
 # bunnycdn-storage-deploy
 
 This action performs 3 operations.
-* Uploads files and folders to storage.
-* Removes all the files from storage.
-* Purges pull zone.
+
+- Uploads files and folders to storage.
+- Removes all the files from storage.
+- Purges pull zone.
 
 Each operation can be activated with their respective upload, remove and purge flags.
 
@@ -27,7 +28,7 @@ The source directory that should be uploaded.
 
 ### `destination`
 
-The destination directory that should be uploaded to in the bunny storage zone. (Example: www). The destination should *not* have a trailing / as in www/.
+The destination directory that should be uploaded to in the bunny storage zone. (Example: www). The destination should _not_ have a trailing / as in www/.
 
 If you want to upload files to a nested directory, you can specify the path to the directory in the destination parameter. For example, if you want to upload files to a directory called assets inside the www directory, you can set the destination parameter to www/assets.
 
@@ -57,7 +58,7 @@ Pull zone ID.
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v2.2.2
+  uses: ayeressian/bunnycdn-storage-deploy@v2.2.3
   with:
     source: "dist"
     destination: "www"
