@@ -23,7 +23,7 @@ export default class Uploader {
       ? `${this.destination}/${entry.path}`
       : entry.path;
     info(
-      `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination} !!! RETRY ENABLED !!!`
+      `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
     );
 
     const numRetries = 10;

@@ -4731,7 +4731,7 @@ class Uploader {
         const destination = this.destination
             ? `${this.destination}/${entry.path}`
             : entry.path;
-        (0, core_1.info)(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination} !!! RETRY ENABLED !!!`);
+        (0, core_1.info)(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
         const numRetries = 10;
         let lastError = null;
         for (let i = 0; i < numRetries; ++i) {
