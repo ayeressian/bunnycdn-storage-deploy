@@ -19,31 +19,53 @@ export default class Uploader {
   }
 
   private async uploadFile(entry: readdirp.EntryInfo) {
-    const readStream = fs.createReadStream(entry.fullPath);
     const destination = this.destination
       ? `${this.destination}/${entry.path}`
       : entry.path;
     info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
     );
-    const response = await fetch(
-      `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
-      {
-        method: "PUT",
-        headers: {
-          AccessKey: this.storagePassword,
-        },
-        body: readStream,
+
+    const numRetries = 10;
+    let lastError: unknown = null;
+
+    for (let i = 0; i < numRetries; ++i) {
+      const readStream = fs.createReadStream(entry.fullPath);
+      let status = -1;
+      try {
+        const response = await fetch(
+          `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
+          {
+            method: "PUT",
+            headers: {
+              AccessKey: this.storagePassword,
+            },
+            body: readStream,
+          }
+        );
+        status = response.status;
+      } catch (e) {
+        lastError = e;
+        info(`Error uploading ${entry.path}: ${e}. Retrying`);
       }
-    );
-    if (response.status === 201) {
+
+      if (status === -1) {
+        const retryDelay = Math.pow(2, i) * 100; // Exponential backoff: 100ms, 200ms, 400ms, etc.
+        await new Promise(res => setTimeout(res, retryDelay));
+        continue;
+      }
+
+      if (status !== 201) {
+        throw new Error(
+          `Uploading ${entry.path} has failed with status code ${status}.`
+        );
+      }
+        
       info(`Successful deployment of ${entry.path}.`);
-    } else {
-      throw new Error(
-        `Uploading ${entry.path} has failed width status code ${response.status}.`
-      );
+      return;
     }
-    return response;
+
+    throw new Error(`Uploading ${entry.path} has failed after ${numRetries} retries`);
   }
 
   async run() {
