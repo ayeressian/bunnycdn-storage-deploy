@@ -9,7 +9,7 @@ inputs:
     required: true
   destination:
     description: "The destination directory that should be uploaded too in the bunny storage zone. (Example: www)."
-    required: "false"
+    required: false
   storageZoneName:
     description: "The name of your storage zone where you are connecting to."
     required: true
