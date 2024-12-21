@@ -93,6 +93,7 @@ describe("Uploader", () => {
     fetchMock.mockReturnValue(Promise.resolve({ status: 201 } as Response));
     vi.mock("@actions/core", () => ({
       info: () => null,
+      warning: () => null,
     }));
     beforeEach(() => {
       uploadFileMethod = (Uploader as any).prototype.uploadFile;
@@ -107,6 +108,34 @@ describe("Uploader", () => {
         { path: "Test", fullPath: "Test", basename: "Test" }
       );
       expect(fetchMock).toHaveBeenCalled();
+    });
+    describe("when fetch request fails", () => {
+      it("should attempt 5 times", async () => {
+        fetchMock
+          .mockClear()
+          .mockReturnValue(Promise.resolve({ status: 500 } as Response));
+        const originalSetTimeout = global.setTimeout;
+
+        //ignore timeout second argument to increase speed
+        const timeoutSpy = vi
+          .spyOn(global, "setTimeout")
+          .mockImplementation((fn) => originalSetTimeout(fn));
+
+        await uploadFileMethod
+          .call(
+            {
+              storageEndpoint: "test",
+              storageName: "test",
+              storagePassword: "test",
+            },
+            { path: "Test", fullPath: "Test", basename: "Test" }
+          )
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          .catch((err) => {});
+        timeoutSpy.mockRestore();
+
+        expect(fetchMock).toHaveBeenCalledTimes(5);
+      });
     });
   });
 });

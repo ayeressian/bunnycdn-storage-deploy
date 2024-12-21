@@ -1,8 +1,9 @@
 import fs from "fs";
 import fetch from "node-fetch";
 import readdirp from "readdirp";
-import { info } from "@actions/core";
+import { info, warning } from "@actions/core";
 import PQueue from "p-queue";
+import promiseRetry, { RetryError } from "./promise-retry";
 
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
 
@@ -26,24 +27,39 @@ export default class Uploader {
     info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
     );
-    const response = await fetch(
-      `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
-      {
-        method: "PUT",
-        headers: {
-          AccessKey: this.storagePassword,
-        },
-        body: readStream,
+    return promiseRetry(async (attempt) => {
+      const response = await fetch(
+        `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
+        {
+          method: "PUT",
+          headers: {
+            AccessKey: this.storagePassword,
+          },
+          body: readStream,
+        }
+      ).catch((err) => {
+        warning(
+          `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`
+        );
+        throw new RetryError(err);
+      });
+      if (response.status === 201) {
+        info(`Successful deployment of ${entry.path}.`);
+      } else {
+        warning(
+          `Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`
+        );
+        throw new RetryError(response);
       }
-    );
-    if (response.status === 201) {
-      info(`Successful deployment of ${entry.path}.`);
-    } else {
-      throw new Error(
-        `Uploading ${entry.path} has failed width status code ${response.status}.`
-      );
-    }
-    return response;
+      return response;
+    }).catch((err) => {
+      if (err.status) {
+        throw new Error(
+          `Uploading ${entry.path} has failed width the status code ${err.status}.`
+        );
+      }
+      throw new Error(`Uploading failed with network or cors error.`);
+    });
   }
 
   async run() {

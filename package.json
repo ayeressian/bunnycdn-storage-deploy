@@ -1,6 +1,6 @@
 {
   "name": "bunnycdn-storage-deploy",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/ayeressian/bunnycdn-storage-deploy#readme",
   "engines": {
-    "npm": "7.24.2",
-    "node": "v16.17.0"
+    "npm": "10.9.0",
+    "node": "v22.12.0"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
