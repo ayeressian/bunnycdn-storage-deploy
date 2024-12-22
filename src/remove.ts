@@ -8,8 +8,8 @@ const remove = async (
   storagePassword: string,
   storageEndpoint: string
 ) => {
-  const _destination = destination ? `${destination}/` : "";
-  const url = `https://${storageEndpoint}/${storageName}/${_destination}`;
+  destination = destination ? `${destination}/` : "";
+  const url = `https://${storageEndpoint}/${storageName}/${destination}`;
   info(`Removing storage data with ${url}`);
 
   await promiseRetry(async (attempt) => {
@@ -26,7 +26,7 @@ const remove = async (
     });
 
     if (response.status === 404) {
-      info(`Destination not found: ${storageName}/${_destination}`);
+      info(`Destination not found: ${storageName}/${destination}`);
     } else if (response.status !== 200 && response.status !== 400) {
       // THERE IS A BUG IN API 400 IS VALID SOMETIMES
       warning(
