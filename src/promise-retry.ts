@@ -9,8 +9,8 @@ export class RetryError extends Error {
 const timeout = (time = 0) =>
   new Promise((resolve) => setTimeout(resolve, time));
 
-const promiseRetry = async (
-  fn: (attempt: number) => Promise<unknown>,
+const promiseRetry = async <T>(
+  fn: (attempt: number) => Promise<T>,
   options?: { attempt?: number }
 ) => {
   const until = options?.attempt ?? 5;
