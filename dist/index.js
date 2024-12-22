@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 861:
+/***/ 4861:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -28,7 +28,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
 const os = __importStar(__webpack_require__(857));
-const utils_1 = __webpack_require__(89);
+const utils_1 = __webpack_require__(7089);
 /**
  * Commands
  *
@@ -100,7 +100,7 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 977:
+/***/ 6977:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -135,12 +135,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __webpack_require__(861);
-const file_command_1 = __webpack_require__(224);
-const utils_1 = __webpack_require__(89);
+const command_1 = __webpack_require__(4861);
+const file_command_1 = __webpack_require__(6224);
+const utils_1 = __webpack_require__(7089);
 const os = __importStar(__webpack_require__(857));
-const path = __importStar(__webpack_require__(928));
-const oidc_utils_1 = __webpack_require__(15);
+const path = __importStar(__webpack_require__(6928));
+const oidc_utils_1 = __webpack_require__(5015);
 /**
  * The code to exit an action
  */
@@ -425,12 +425,12 @@ exports.getIDToken = getIDToken;
 /**
  * Summary exports
  */
-var summary_1 = __webpack_require__(40);
+var summary_1 = __webpack_require__(1040);
 Object.defineProperty(exports, "summary", ({ enumerable: true, get: function () { return summary_1.summary; } }));
 /**
  * @deprecated use core.summary
  */
-var summary_2 = __webpack_require__(40);
+var summary_2 = __webpack_require__(1040);
 Object.defineProperty(exports, "markdownSummary", ({ enumerable: true, get: function () { return summary_2.markdownSummary; } }));
 /**
  * Path exports
@@ -443,7 +443,7 @@ Object.defineProperty(exports, "toPlatformPath", ({ enumerable: true, get: funct
 
 /***/ }),
 
-/***/ 224:
+/***/ 6224:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -472,10 +472,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__webpack_require__(896));
+const fs = __importStar(__webpack_require__(9896));
 const os = __importStar(__webpack_require__(857));
-const uuid_1 = __webpack_require__(371);
-const utils_1 = __webpack_require__(89);
+const uuid_1 = __webpack_require__(4371);
+const utils_1 = __webpack_require__(7089);
 function issueFileCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -508,7 +508,7 @@ exports.prepareKeyValueMessage = prepareKeyValueMessage;
 
 /***/ }),
 
-/***/ 15:
+/***/ 5015:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -525,8 +525,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
 const http_client_1 = __webpack_require__(677);
-const auth_1 = __webpack_require__(259);
-const core_1 = __webpack_require__(977);
+const auth_1 = __webpack_require__(9259);
+const core_1 = __webpack_require__(6977);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
         const requestOptions = {
@@ -618,7 +618,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = void 0;
-const path = __importStar(__webpack_require__(928));
+const path = __importStar(__webpack_require__(6928));
 /**
  * toPosixPath converts the given path to the posix form. On Windows, \\ will be
  * replaced with /.
@@ -657,7 +657,7 @@ exports.toPlatformPath = toPlatformPath;
 
 /***/ }),
 
-/***/ 40:
+/***/ 1040:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -674,7 +674,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;
 const os_1 = __webpack_require__(857);
-const fs_1 = __webpack_require__(896);
+const fs_1 = __webpack_require__(9896);
 const { access, appendFile, writeFile } = fs_1.promises;
 exports.SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY';
 exports.SUMMARY_DOCS_URL = 'https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary';
@@ -947,7 +947,7 @@ exports.summary = _summary;
 
 /***/ }),
 
-/***/ 89:
+/***/ 7089:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -994,7 +994,7 @@ exports.toCommandProperties = toCommandProperties;
 
 /***/ }),
 
-/***/ 259:
+/***/ 9259:
 /***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
@@ -1118,9 +1118,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HttpClient = exports.isHttps = exports.HttpClientResponse = exports.HttpClientError = exports.getProxyUrl = exports.MediaTypes = exports.Headers = exports.HttpCodes = void 0;
-const http = __importStar(__webpack_require__(611));
-const https = __importStar(__webpack_require__(692));
-const pm = __importStar(__webpack_require__(669));
+const http = __importStar(__webpack_require__(8611));
+const https = __importStar(__webpack_require__(5692));
+const pm = __importStar(__webpack_require__(8669));
 const tunnel = __importStar(__webpack_require__(803));
 var HttpCodes;
 (function (HttpCodes) {
@@ -1694,7 +1694,7 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 
 /***/ }),
 
-/***/ 669:
+/***/ 8669:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2106,14 +2106,14 @@ if (true) {
 
 /***/ }),
 
-/***/ 157:
+/***/ 5157:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /*! node-domexception. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 
 if (!globalThis.DOMException) {
   try {
-    const { MessageChannel } = __webpack_require__(167),
+    const { MessageChannel } = __webpack_require__(8167),
     port = new MessageChannel().port1,
     ab = new ArrayBuffer()
     port.postMessage(ab, [ab, ab])
@@ -2129,24 +2129,24 @@ module.exports = globalThis.DOMException
 
 /***/ }),
 
-/***/ 538:
+/***/ 7538:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-module.exports = __webpack_require__(675);
+module.exports = __webpack_require__(6675);
 
 
 /***/ }),
 
-/***/ 940:
+/***/ 3940:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-const path = __webpack_require__(928);
+const path = __webpack_require__(6928);
 const WIN_SLASH = '\\\\/';
 const WIN_NO_SLASH = `[^${WIN_SLASH}]`;
 
@@ -2327,13 +2327,13 @@ module.exports = {
 
 /***/ }),
 
-/***/ 154:
+/***/ 1154:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-const constants = __webpack_require__(940);
+const constants = __webpack_require__(3940);
 const utils = __webpack_require__(280);
 
 /**
@@ -3426,17 +3426,17 @@ module.exports = parse;
 
 /***/ }),
 
-/***/ 675:
+/***/ 6675:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-const path = __webpack_require__(928);
-const scan = __webpack_require__(608);
-const parse = __webpack_require__(154);
+const path = __webpack_require__(6928);
+const scan = __webpack_require__(2608);
+const parse = __webpack_require__(1154);
 const utils = __webpack_require__(280);
-const constants = __webpack_require__(940);
+const constants = __webpack_require__(3940);
 const isObject = val => val && typeof val === 'object' && !Array.isArray(val);
 
 /**
@@ -3776,7 +3776,7 @@ module.exports = picomatch;
 
 /***/ }),
 
-/***/ 608:
+/***/ 2608:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3799,7 +3799,7 @@ const {
   CHAR_RIGHT_CURLY_BRACE,    /* } */
   CHAR_RIGHT_PARENTHESES,    /* ) */
   CHAR_RIGHT_SQUARE_BRACKET  /* ] */
-} = __webpack_require__(940);
+} = __webpack_require__(3940);
 
 const isPathSeparator = code => {
   return code === CHAR_FORWARD_SLASH || code === CHAR_BACKWARD_SLASH;
@@ -4181,14 +4181,14 @@ module.exports = scan;
 "use strict";
 
 
-const path = __webpack_require__(928);
+const path = __webpack_require__(6928);
 const win32 = process.platform === 'win32';
 const {
   REGEX_BACKSLASH,
   REGEX_REMOVE_BACKSLASH,
   REGEX_SPECIAL_CHARS,
   REGEX_SPECIAL_CHARS_GLOBAL
-} = __webpack_require__(940);
+} = __webpack_require__(3940);
 
 exports.isObject = val => val !== null && typeof val === 'object' && !Array.isArray(val);
 exports.hasRegexChars = str => REGEX_SPECIAL_CHARS.test(str);
@@ -4247,17 +4247,17 @@ exports.wrapOutput = (input, state = {}, options = {}) => {
 
 /***/ }),
 
-/***/ 84:
+/***/ 9084:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-const fs = __webpack_require__(896);
-const { Readable } = __webpack_require__(203);
-const sysPath = __webpack_require__(928);
-const { promisify } = __webpack_require__(23);
-const picomatch = __webpack_require__(538);
+const fs = __webpack_require__(9896);
+const { Readable } = __webpack_require__(2203);
+const sysPath = __webpack_require__(6928);
+const { promisify } = __webpack_require__(9023);
+const picomatch = __webpack_require__(7538);
 
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
@@ -4542,7 +4542,7 @@ module.exports = readdirp;
 
 /***/ }),
 
-/***/ 156:
+/***/ 8156:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -4551,11 +4551,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(977);
-const path_1 = __webpack_require__(928);
-const uploader_1 = __importDefault(__webpack_require__(732));
-const purge_1 = __importDefault(__webpack_require__(483));
-const remove_1 = __importDefault(__webpack_require__(914));
+const core_1 = __webpack_require__(6977);
+const path_1 = __webpack_require__(6928);
+const uploader_1 = __importDefault(__webpack_require__(2732));
+const purge_1 = __importDefault(__webpack_require__(4483));
+const remove_1 = __importDefault(__webpack_require__(9914));
 class Main {
     constructor() {
         this.params = this.getParams();
@@ -4638,85 +4638,220 @@ new Main().run();
 
 /***/ }),
 
-/***/ 483:
+/***/ 1682:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RetryError = void 0;
+class RetryError extends Error {
+    constructor(err) {
+        super();
+        this.err = err;
+    }
+}
+exports.RetryError = RetryError;
+const timeout = (time = 0) => new Promise((resolve) => setTimeout(resolve, time));
+const promiseRetry = async (fn, options) => {
+    var _a;
+    const until = (_a = options === null || options === void 0 ? void 0 : options.attempt) !== null && _a !== void 0 ? _a : 5;
+    for (let i = 0; i < until; ++i) {
+        if (i !== 0)
+            await timeout(Math.pow(2, i) * 100);
+        try {
+            return await fn(i + 1);
+        }
+        catch (err) {
+            if (err instanceof RetryError) {
+                if (i === until - 1)
+                    throw err.err;
+                continue;
+            }
+            else {
+                throw err;
+            }
+        }
+    }
+};
+exports["default"] = promiseRetry;
+
+
+/***/ }),
+
+/***/ 4483:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const node_fetch_1 = __importDefault(__webpack_require__(65));
-const core_1 = __webpack_require__(977);
+const node_fetch_1 = __importDefault(__webpack_require__(2065));
+const core_1 = __webpack_require__(6977);
+const promise_retry_1 = __importStar(__webpack_require__(1682));
 const purge = async (pullZoneId, accessKey) => {
-    const response = await (0, node_fetch_1.default)(`https://api.bunny.net/pullzone/${pullZoneId}/purgeCache`, {
-        method: "POST",
-        headers: {
-            AccessKey: accessKey,
-        },
+    await (0, promise_retry_1.default)(async (attempt) => {
+        const response = await (0, node_fetch_1.default)(`https://api.bunny.net/pullzone/${pullZoneId}/purgeCache`, {
+            method: "POST",
+            headers: {
+                AccessKey: accessKey,
+            },
+        }).catch((err) => {
+            (0, core_1.warning)(`Purging failed with network or cors error. Attempt number ${attempt}. Retrying...`);
+            throw new promise_retry_1.RetryError(err);
+        });
+        if (response.status !== 204) {
+            (0, core_1.warning)(`Purging failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
+            throw new promise_retry_1.RetryError(response);
+        }
+        (0, core_1.info)("Cache successfully purged.");
+    }).catch((err) => {
+        if (err.status) {
+            throw new Error(`Purging failed with the status code ${err.status}.`);
+        }
+        throw new Error(`Purging failed with network or cors error.`);
     });
-    if (response.status !== 204) {
-        throw new Error(`Purging failed with the status code ${response.status}.`);
-    }
-    (0, core_1.info)("Cache successfully purged.");
 };
 exports["default"] = purge;
 
 
 /***/ }),
 
-/***/ 914:
+/***/ 9914:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(977);
-const node_fetch_1 = __importDefault(__webpack_require__(65));
+const core_1 = __webpack_require__(6977);
+const node_fetch_1 = __importDefault(__webpack_require__(2065));
+const promise_retry_1 = __importStar(__webpack_require__(1682));
 const remove = async (destination, storageName, storagePassword, storageEndpoint) => {
     const _destination = destination ? `${destination}/` : "";
     const url = `https://${storageEndpoint}/${storageName}/${_destination}`;
     (0, core_1.info)(`Removing storage data with ${url}`);
-    const response = await (0, node_fetch_1.default)(url, {
-        method: "DELETE",
-        headers: {
-            AccessKey: storagePassword,
-        },
+    await (0, promise_retry_1.default)(async (attempt) => {
+        const response = await (0, node_fetch_1.default)(url, {
+            method: "DELETE",
+            headers: {
+                AccessKey: storagePassword,
+            },
+        }).catch((err) => {
+            (0, core_1.warning)(`Removing storage data failed with network or cors error. Attempt number ${attempt}. Retrying...`);
+            throw new promise_retry_1.RetryError(err);
+        });
+        if (response.status === 404) {
+            (0, core_1.info)(`Destination not found: ${storageName}/${_destination}`);
+        }
+        else if (response.status !== 200 && response.status !== 400) {
+            // THERE IS A BUG IN API 400 IS VALID SOMETIMES
+            (0, core_1.warning)(`Removing storage data failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
+            throw new promise_retry_1.RetryError(response);
+        }
+        else {
+            (0, core_1.info)("Storage data successfully removed.");
+        }
+    }).catch((err) => {
+        if (err.status) {
+            throw new Error(`Removing storage data failed with the status code ${err.status}.`);
+        }
+        throw new Error(`Removing storage data failed with network or cors error.`);
     });
-    if (response.status === 404) {
-        (0, core_1.info)(`Destination not found: ${storageName}/${_destination}`);
-    }
-    else if (response.status !== 200 && response.status !== 400) {
-        // THERE IS A BUG IN API 400 IS VALID SOMETIMES
-        throw new Error(`Removing storage data failed with the status code ${response.status}.`);
-    }
-    else {
-        (0, core_1.info)("Storage data successfully removed.");
-    }
 };
 exports["default"] = remove;
 
 
 /***/ }),
 
-/***/ 732:
+/***/ 2732:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fs_1 = __importDefault(__webpack_require__(896));
-const node_fetch_1 = __importDefault(__webpack_require__(65));
-const readdirp_1 = __importDefault(__webpack_require__(84));
-const core_1 = __webpack_require__(977);
-const p_queue_1 = __importDefault(__webpack_require__(343));
+const fs_1 = __importDefault(__webpack_require__(9896));
+const node_fetch_1 = __importDefault(__webpack_require__(2065));
+const readdirp_1 = __importDefault(__webpack_require__(9084));
+const core_1 = __webpack_require__(6977);
+const p_queue_1 = __importDefault(__webpack_require__(8343));
+const promise_retry_1 = __importStar(__webpack_require__(1682));
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
 class Uploader {
     constructor(path, destination, storageName, storagePassword, storageEndpoint) {
@@ -4733,20 +4868,31 @@ class Uploader {
             ? `${this.destination}/${entry.path}`
             : entry.path;
         (0, core_1.info)(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
-        const response = await (0, node_fetch_1.default)(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
-            method: "PUT",
-            headers: {
-                AccessKey: this.storagePassword,
-            },
-            body: readStream,
+        return (0, promise_retry_1.default)(async (attempt) => {
+            const response = await (0, node_fetch_1.default)(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
+                method: "PUT",
+                headers: {
+                    AccessKey: this.storagePassword,
+                },
+                body: readStream,
+            }).catch((err) => {
+                (0, core_1.warning)(`Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`);
+                throw new promise_retry_1.RetryError(err);
+            });
+            if (response.status === 201) {
+                (0, core_1.info)(`Successful deployment of ${entry.path}.`);
+            }
+            else {
+                (0, core_1.warning)(`Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
+                throw new promise_retry_1.RetryError(response);
+            }
+            return response;
+        }).catch((err) => {
+            if (err.status) {
+                throw new Error(`Uploading ${entry.path} has failed width the status code ${err.status}.`);
+            }
+            throw new Error(`Uploading failed with network or cors error.`);
         });
-        if (response.status === 201) {
-            (0, core_1.info)(`Successful deployment of ${entry.path}.`);
-        }
-        else {
-            throw new Error(`Uploading ${entry.path} has failed width status code ${response.status}.`);
-        }
-        return response;
     }
     async run() {
         for await (const entry of (0, readdirp_1.default)(this.path)) {
@@ -4763,24 +4909,24 @@ exports["default"] = Uploader;
 /***/ 803:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = __webpack_require__(469);
+module.exports = __webpack_require__(7469);
 
 
 /***/ }),
 
-/***/ 469:
+/***/ 7469:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 
-var net = __webpack_require__(278);
-var tls = __webpack_require__(756);
-var http = __webpack_require__(611);
-var https = __webpack_require__(692);
-var events = __webpack_require__(434);
-var assert = __webpack_require__(613);
-var util = __webpack_require__(23);
+var net = __webpack_require__(9278);
+var tls = __webpack_require__(4756);
+var http = __webpack_require__(8611);
+var https = __webpack_require__(5692);
+var events = __webpack_require__(4434);
+var assert = __webpack_require__(2613);
+var util = __webpack_require__(9023);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -5040,7 +5186,7 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 371:
+/***/ 4371:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5403,7 +5549,7 @@ function version(uuid) {
 
 /***/ }),
 
-/***/ 10:
+/***/ 5010:
 /***/ (function(__unused_webpack_module, exports) {
 
 /**
@@ -9622,7 +9768,7 @@ function version(uuid) {
 
 /***/ }),
 
-/***/ 613:
+/***/ 2613:
 /***/ ((module) => {
 
 "use strict";
@@ -9638,7 +9784,7 @@ module.exports = require("buffer");
 
 /***/ }),
 
-/***/ 434:
+/***/ 4434:
 /***/ ((module) => {
 
 "use strict";
@@ -9646,7 +9792,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 896:
+/***/ 9896:
 /***/ ((module) => {
 
 "use strict";
@@ -9654,7 +9800,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 611:
+/***/ 8611:
 /***/ ((module) => {
 
 "use strict";
@@ -9662,7 +9808,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 692:
+/***/ 5692:
 /***/ ((module) => {
 
 "use strict";
@@ -9670,7 +9816,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 278:
+/***/ 9278:
 /***/ ((module) => {
 
 "use strict";
@@ -9678,7 +9824,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 708:
+/***/ 1708:
 /***/ ((module) => {
 
 "use strict";
@@ -9686,7 +9832,7 @@ module.exports = require("node:process");
 
 /***/ }),
 
-/***/ 830:
+/***/ 7830:
 /***/ ((module) => {
 
 "use strict";
@@ -9702,7 +9848,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 928:
+/***/ 6928:
 /***/ ((module) => {
 
 "use strict";
@@ -9710,7 +9856,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 203:
+/***/ 2203:
 /***/ ((module) => {
 
 "use strict";
@@ -9718,7 +9864,7 @@ module.exports = require("stream");
 
 /***/ }),
 
-/***/ 756:
+/***/ 4756:
 /***/ ((module) => {
 
 "use strict";
@@ -9726,7 +9872,7 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 23:
+/***/ 9023:
 /***/ ((module) => {
 
 "use strict";
@@ -9734,7 +9880,7 @@ module.exports = require("util");
 
 /***/ }),
 
-/***/ 167:
+/***/ 8167:
 /***/ ((module) => {
 
 "use strict";
@@ -9742,7 +9888,7 @@ module.exports = require("worker_threads");
 
 /***/ }),
 
-/***/ 328:
+/***/ 3328:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* c8 ignore start */
@@ -9754,11 +9900,11 @@ if (!globalThis.ReadableStream) {
   // and it's preferred over the polyfilled version. So we also
   // suppress the warning that gets emitted by NodeJS for using it.
   try {
-    const process = __webpack_require__(708)
+    const process = __webpack_require__(1708)
     const { emitWarning } = process
     try {
       process.emitWarning = () => {}
-      Object.assign(globalThis, __webpack_require__(830))
+      Object.assign(globalThis, __webpack_require__(7830))
       process.emitWarning = emitWarning
     } catch (error) {
       process.emitWarning = emitWarning
@@ -9766,7 +9912,7 @@ if (!globalThis.ReadableStream) {
     }
   } catch (error) {
     // fallback to polyfill implementation
-    Object.assign(globalThis, __webpack_require__(10))
+    Object.assign(globalThis, __webpack_require__(5010))
   }
 }
 
@@ -9800,7 +9946,7 @@ try {
 
 /***/ }),
 
-/***/ 288:
+/***/ 7288:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9808,7 +9954,7 @@ try {
 /* harmony export */   A: () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* unused harmony export File */
-/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(720);
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3720);
 
 
 const _File = class File extends _index_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .A {
@@ -9862,7 +10008,7 @@ const File = _File
 
 /***/ }),
 
-/***/ 730:
+/***/ 9730:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9884,11 +10030,11 @@ const external_node_fs_namespaceObject = require("node:fs");
 ;// external "node:path"
 const external_node_path_namespaceObject = require("node:path");
 // EXTERNAL MODULE: ./node_modules/node-domexception/index.js
-var node_domexception = __webpack_require__(157);
+var node_domexception = __webpack_require__(5157);
 // EXTERNAL MODULE: ./node_modules/fetch-blob/file.js
-var file = __webpack_require__(288);
+var file = __webpack_require__(7288);
 // EXTERNAL MODULE: ./node_modules/fetch-blob/index.js
-var fetch_blob = __webpack_require__(720);
+var fetch_blob = __webpack_require__(3720);
 ;// ./node_modules/fetch-blob/from.js
 
 
@@ -9994,7 +10140,7 @@ class BlobDataItem {
 
 /***/ }),
 
-/***/ 720:
+/***/ 3720:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10002,7 +10148,7 @@ class BlobDataItem {
 /* harmony export */   A: () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* unused harmony export Blob */
-/* harmony import */ var _streams_cjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(328);
+/* harmony import */ var _streams_cjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3328);
 /*! fetch-blob. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 
 // TODO (jimmywarting): in the feature use conditional loading with top level await (requires 14.x)
@@ -10257,7 +10403,7 @@ const Blob = _Blob
 
 /***/ }),
 
-/***/ 435:
+/***/ 8435:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10266,8 +10412,8 @@ const Blob = _Blob
 /* harmony export */   fS: () => (/* binding */ FormData)
 /* harmony export */ });
 /* unused harmony export File */
-/* harmony import */ var fetch_blob__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(720);
-/* harmony import */ var fetch_blob_file_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(288);
+/* harmony import */ var fetch_blob__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3720);
+/* harmony import */ var fetch_blob_file_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7288);
 /*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 
 
@@ -10312,7 +10458,7 @@ return new B(c,{type:"multipart/form-data; boundary="+b})}
 
 /***/ }),
 
-/***/ 65:
+/***/ 2065:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10404,9 +10550,9 @@ function dataUriToBuffer(uri) {
 ;// external "node:util"
 const external_node_util_namespaceObject = require("node:util");
 // EXTERNAL MODULE: ./node_modules/fetch-blob/index.js
-var fetch_blob = __webpack_require__(720);
+var fetch_blob = __webpack_require__(3720);
 // EXTERNAL MODULE: ./node_modules/formdata-polyfill/esm.min.js
-var esm_min = __webpack_require__(435);
+var esm_min = __webpack_require__(8435);
 ;// ./node_modules/node-fetch/src/errors/base.js
 class FetchBaseError extends Error {
 	constructor(message, type) {
@@ -10667,7 +10813,7 @@ class Body {
 			return formData;
 		}
 
-		const {toFormData} = await __webpack_require__.e(/* import() */ 460).then(__webpack_require__.bind(__webpack_require__, 460));
+		const {toFormData} = await __webpack_require__.e(/* import() */ 460).then(__webpack_require__.bind(__webpack_require__, 7460));
 		return toFormData(this.body, ct);
 	}
 
@@ -12069,7 +12215,7 @@ class AbortError extends FetchBaseError {
 }
 
 // EXTERNAL MODULE: ./node_modules/fetch-blob/from.js + 2 modules
-var from = __webpack_require__(730);
+var from = __webpack_require__(9730);
 ;// ./node_modules/node-fetch/src/index.js
 /**
  * Index.js
@@ -12485,7 +12631,7 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 
 /***/ }),
 
-/***/ 343:
+/***/ 8343:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -13150,7 +13296,7 @@ _PQueue_carryoverConcurrencyCount = new WeakMap(), _PQueue_isIntervalIgnored = n
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(156);
+/******/ 	var __webpack_exports__ = __webpack_require__(8156);
 /******/ 	
 /******/ })()
 ;
