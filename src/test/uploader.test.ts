@@ -96,6 +96,7 @@ describe("Uploader", () => {
       warning: () => null,
     }));
     beforeEach(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       uploadFileMethod = (Uploader as any).prototype.uploadFile;
     });
     it("should make fetch request", async () => {
@@ -131,7 +132,7 @@ describe("Uploader", () => {
             { path: "Test", fullPath: "Test", basename: "Test" }
           )
           // eslint-disable-next-line @typescript-eslint/no-empty-function
-          .catch((err) => {});
+          .catch(() => {});
         timeoutSpy.mockRestore();
 
         expect(fetchMock).toHaveBeenCalledTimes(5);
