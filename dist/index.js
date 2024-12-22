@@ -4778,8 +4778,8 @@ const core_1 = __webpack_require__(6977);
 const node_fetch_1 = __importDefault(__webpack_require__(2065));
 const promise_retry_1 = __importStar(__webpack_require__(1682));
 const remove = async (destination, storageName, storagePassword, storageEndpoint) => {
-    const _destination = destination ? `${destination}/` : "";
-    const url = `https://${storageEndpoint}/${storageName}/${_destination}`;
+    destination = destination ? `${destination}/` : "";
+    const url = `https://${storageEndpoint}/${storageName}/${destination}`;
     (0, core_1.info)(`Removing storage data with ${url}`);
     await (0, promise_retry_1.default)(async (attempt) => {
         const response = await (0, node_fetch_1.default)(url, {
@@ -4792,7 +4792,7 @@ const remove = async (destination, storageName, storagePassword, storageEndpoint
             throw new promise_retry_1.RetryError(err);
         });
         if (response.status === 404) {
-            (0, core_1.info)(`Destination not found: ${storageName}/${_destination}`);
+            (0, core_1.info)(`Destination not found: ${storageName}/${destination}`);
         }
         else if (response.status !== 200 && response.status !== 400) {
             // THERE IS A BUG IN API 400 IS VALID SOMETIMES
