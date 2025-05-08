@@ -4581,6 +4581,7 @@ class Main {
             accessKey: (0, core_1.getInput)("accessKey"),
             pullZoneId: (0, core_1.getInput)("pullZoneId"),
             purgePullZoneFlag: (0, core_1.getInput)("purgePullZone"),
+            purgePullZoneDelay: (0, core_1.getInput)("purgePullZoneDelay"),
             removeFlag: (0, core_1.getInput)("remove"),
             uploadFlag: (0, core_1.getInput)("upload"),
         };
@@ -4625,6 +4626,17 @@ class Main {
             }
             if (!this.params.accessKey) {
                 throw new Error("Can't purge, accessKey was not set.");
+            }
+            if (this.params.purgePullZoneDelay !== "0") {
+                const delay = parseInt(this.params.purgePullZoneDelay, 10);
+                if (isNaN(delay)) {
+                    throw new Error("Can't purge, purgePullZoneDelay is not a number.");
+                }
+                if (delay < 0) {
+                    throw new Error("Can't purge, purgePullZoneDelay is negative.");
+                }
+                (0, core_1.info)(`Waiting ${delay} seconds before purging pull zone`);
+                await new Promise((resolve) => setTimeout(resolve, delay * 1000));
             }
             if (this.params.pullZoneId && this.params.accessKey) {
                 (0, core_1.info)(`Purging pull zone with the id ${this.params.pullZoneId}`);
