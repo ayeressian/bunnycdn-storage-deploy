@@ -22,6 +22,10 @@ It will remove all the files from storage before uploading if "true" provided. s
 
 It will purge the pull zone if "true" provided. pullZoneId and accessKey inputs should be provided.
 
+### `purgePullZoneDelay`
+
+Waits this many seconds before purging the pull zone in order to allow the storage zone time to replicate.
+
 ### `source`
 
 The source directory that should be uploaded.
@@ -69,4 +73,5 @@ Pull zone ID.
     upload: "true"
     remove: "true"
     purgePullZone: "true"
+    purgePullZoneDelay: "5"
 ```

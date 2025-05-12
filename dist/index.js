@@ -4581,6 +4581,7 @@ class Main {
             accessKey: (0, core_1.getInput)("accessKey"),
             pullZoneId: (0, core_1.getInput)("pullZoneId"),
             purgePullZoneFlag: (0, core_1.getInput)("purgePullZone"),
+            purgePullZoneDelay: (0, core_1.getInput)("purgePullZoneDelay"),
             removeFlag: (0, core_1.getInput)("remove"),
             uploadFlag: (0, core_1.getInput)("upload"),
         };
@@ -4626,9 +4627,16 @@ class Main {
             if (!this.params.accessKey) {
                 throw new Error("Can't purge, accessKey was not set.");
             }
+            const purgePullZoneDelay = this.params.purgePullZoneDelay !== "0" ? parseInt(this.params.purgePullZoneDelay, 10) : 0;
+            if (isNaN(purgePullZoneDelay)) {
+                throw new Error("Can't purge, purgePullZoneDelay is not a number.");
+            }
+            if (purgePullZoneDelay < 0) {
+                throw new Error("Can't purge, purgePullZoneDelay is negative.");
+            }
             if (this.params.pullZoneId && this.params.accessKey) {
                 (0, core_1.info)(`Purging pull zone with the id ${this.params.pullZoneId}`);
-                await (0, purge_1.default)(this.params.pullZoneId, this.params.accessKey);
+                await (0, purge_1.default)(this.params.pullZoneId, this.params.accessKey, purgePullZoneDelay);
             }
         }
     }
@@ -4714,7 +4722,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const node_fetch_1 = __importDefault(__webpack_require__(2065));
 const core_1 = __webpack_require__(6977);
 const promise_retry_1 = __importStar(__webpack_require__(1682));
-const purge = async (pullZoneId, accessKey) => {
+const purge = async (pullZoneId, accessKey, delay) => {
+    if (delay > 0) {
+        (0, core_1.info)(`Waiting ${delay} seconds before purging pull zone`);
+        await new Promise((resolve) => setTimeout(resolve, delay * 1000));
+    }
     await (0, promise_retry_1.default)(async (attempt) => {
         const response = await (0, node_fetch_1.default)(`https://api.bunny.net/pullzone/${pullZoneId}/purgeCache`, {
             method: "POST",

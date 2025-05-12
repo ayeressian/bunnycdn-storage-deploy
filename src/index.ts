@@ -1,4 +1,4 @@
-import { getInput, setFailed, info } from "@actions/core";
+import { getInput, setFailed, info, warning } from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";
@@ -13,6 +13,7 @@ type Params = {
   accessKey: string;
   pullZoneId: string;
   purgePullZoneFlag: string;
+  purgePullZoneDelay: string;
   removeFlag: string;
   uploadFlag: string;
 };
@@ -45,6 +46,7 @@ class Main {
       pullZoneId: getInput("pullZoneId"),
 
       purgePullZoneFlag: getInput("purgePullZone"),
+      purgePullZoneDelay: getInput("purgePullZoneDelay"),
       removeFlag: getInput("remove"),
       uploadFlag: getInput("upload"),
     };
@@ -106,9 +108,16 @@ class Main {
       if (!this.params.accessKey) {
         throw new Error("Can't purge, accessKey was not set.");
       }
+      const purgePullZoneDelay = this.params.purgePullZoneDelay !== "0" ? parseInt(this.params.purgePullZoneDelay, 10) : 0;
+      if (isNaN(purgePullZoneDelay)) {
+        throw new Error("Can't purge, purgePullZoneDelay is not a number.");
+      }
+      if (purgePullZoneDelay < 0) {
+        throw new Error("Can't purge, purgePullZoneDelay is negative.");
+      }
       if (this.params.pullZoneId && this.params.accessKey) {
         info(`Purging pull zone with the id ${this.params.pullZoneId}`);
-        await purge(this.params.pullZoneId, this.params.accessKey);
+        await purge(this.params.pullZoneId, this.params.accessKey, purgePullZoneDelay);
       }
     }
   }

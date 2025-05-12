@@ -2,7 +2,11 @@ import fetch from "node-fetch";
 import { info, warning } from "@actions/core";
 import promiseRetry, { RetryError } from "./promise-retry";
 
-const purge = async (pullZoneId: string, accessKey: string) => {
+const purge = async (pullZoneId: string, accessKey: string, delay: number) => {
+  if (delay > 0) {
+    info(`Waiting ${delay} seconds before purging pull zone`);
+    await new Promise((resolve) => setTimeout(resolve, delay * 1000));
+  }
   await promiseRetry(async (attempt) => {
     const response = await fetch(
       `https://api.bunny.net/pullzone/${pullZoneId}/purgeCache`,
