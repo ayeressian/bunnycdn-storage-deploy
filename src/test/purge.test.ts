@@ -7,7 +7,7 @@ describe("when calling purge function", () => {
     vi.mock("node-fetch");
     const fetchMock = vi.mocked(nodeFetch);
     fetchMock.mockReturnValue(Promise.resolve({ status: 204 } as Response));
-    await purge("zoneId", "zoneKey");
+    await purge("zoneId", "zoneKey", 0);
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.bunny.net/pullzone/zoneId/purgeCache",
       expect.anything()
