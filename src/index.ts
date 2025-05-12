@@ -108,7 +108,10 @@ class Main {
       if (!this.params.accessKey) {
         throw new Error("Can't purge, accessKey was not set.");
       }
-      const purgePullZoneDelay = this.params.purgePullZoneDelay !== "0" ? parseInt(this.params.purgePullZoneDelay, 10) : 0;
+      const purgePullZoneDelay =
+        this.params.purgePullZoneDelay !== "0"
+          ? parseInt(this.params.purgePullZoneDelay, 10)
+          : 0;
       if (isNaN(purgePullZoneDelay)) {
         throw new Error("Can't purge, purgePullZoneDelay is not a number.");
       }
@@ -117,7 +120,11 @@ class Main {
       }
       if (this.params.pullZoneId && this.params.accessKey) {
         info(`Purging pull zone with the id ${this.params.pullZoneId}`);
-        await purge(this.params.pullZoneId, this.params.accessKey, purgePullZoneDelay);
+        await purge(
+          this.params.pullZoneId,
+          this.params.accessKey,
+          purgePullZoneDelay
+        );
       }
     }
   }
