@@ -4627,7 +4627,9 @@ class Main {
             if (!this.params.accessKey) {
                 throw new Error("Can't purge, accessKey was not set.");
             }
-            const purgePullZoneDelay = this.params.purgePullZoneDelay !== "0" ? parseInt(this.params.purgePullZoneDelay, 10) : 0;
+            const purgePullZoneDelay = this.params.purgePullZoneDelay !== "0"
+                ? parseInt(this.params.purgePullZoneDelay, 10)
+                : 0;
             if (isNaN(purgePullZoneDelay)) {
                 throw new Error("Can't purge, purgePullZoneDelay is not a number.");
             }
