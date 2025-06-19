@@ -43,7 +43,8 @@ const remove = async (
         `Removing storage data failed with the status code ${err.status}.`
       );
     }
-    throw new Error(`Removing storage data failed with network or cors error.`);
+    // @ts-expect-error
+    throw new Error(`Removing storage data failed with network or cors error.`, { cause: err });
   });
 };
 

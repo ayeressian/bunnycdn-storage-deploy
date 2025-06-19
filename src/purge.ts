@@ -33,7 +33,8 @@ const purge = async (pullZoneId: string, accessKey: string, delay: number, maxRe
     if (err.status) {
       throw new Error(`Purging failed with the status code ${err.status}.`);
     }
-    throw new Error(`Purging failed with network or cors error.`);
+    // @ts-expect-error
+    throw new Error(`Purging failed with network or cors error.`, { cause: err });
   });
 };
 
