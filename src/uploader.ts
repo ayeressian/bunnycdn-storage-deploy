@@ -14,7 +14,8 @@ export default class Uploader {
     private destination: string,
     private storageName: string,
     private storagePassword: string,
-    private storageEndpoint: string
+    private storageEndpoint: string,
+    private maxRetries: number,
   ) {
     this.queue = new PQueue({ concurrency: NUM_OF_CONCURRENT_REQ });
   }
@@ -52,13 +53,14 @@ export default class Uploader {
         throw new RetryError(response);
       }
       return response;
-    }).catch((err) => {
+    }, { until: this.maxRetries }).catch((err) => {
       if (err.status) {
         throw new Error(
           `Uploading ${entry.path} has failed width the status code ${err.status}.`
         );
       }
-      throw new Error(`Uploading failed with network or cors error.`);
+      // @ts-expect-error
+      throw new Error(`Uploading failed with network or cors error.`, { cause: err });
     });
   }
 
