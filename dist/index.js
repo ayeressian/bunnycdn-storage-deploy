@@ -4772,7 +4772,8 @@ const purge = async (pullZoneId, accessKey, delay, maxRetries) => {
         if (err.status) {
             throw new Error(`Purging failed with the status code ${err.status}.`);
         }
-        throw new Error(`Purging failed with network or cors error.`);
+        // @ts-expect-error
+        throw new Error(`Purging failed with network or cors error.`, { cause: err });
     });
 };
 exports["default"] = purge;
@@ -4854,7 +4855,8 @@ const remove = async (destination, storageName, storagePassword, storageEndpoint
         if (err.status) {
             throw new Error(`Removing storage data failed with the status code ${err.status}.`);
         }
-        throw new Error(`Removing storage data failed with network or cors error.`);
+        // @ts-expect-error
+        throw new Error(`Removing storage data failed with network or cors error.`, { cause: err });
     });
 };
 exports["default"] = remove;
