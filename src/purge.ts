@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import { info, warning } from "@actions/core";
 import promiseRetry, { RetryError } from "./promise-retry";
 
-const purge = async (pullZoneId: string, accessKey: string, delay: number) => {
+const purge = async (pullZoneId: string, accessKey: string, delay: number, maxRetries: number) => {
   if (delay > 0) {
     info(`Waiting ${delay} seconds before purging pull zone`);
     await new Promise((resolve) => setTimeout(resolve, delay * 1000));
@@ -29,11 +29,12 @@ const purge = async (pullZoneId: string, accessKey: string, delay: number) => {
       throw new RetryError(response);
     }
     info("Cache successfully purged.");
-  }).catch((err) => {
+  }, { until: maxRetries }).catch((err) => {
     if (err.status) {
       throw new Error(`Purging failed with the status code ${err.status}.`);
     }
-    throw new Error(`Purging failed with network or cors error.`);
+    // @ts-expect-error
+    throw new Error(`Purging failed with network or cors error.`, { cause: err });
   });
 };
 
