@@ -146,8 +146,8 @@ class Main {
     if (maxRetries < 0) {
       throw new Error("Can't purge, maxRetries is negative.");
     }
-    return maxRetries;``
+    return maxRetries;
   }
 }
-``
+
 new Main().run();
