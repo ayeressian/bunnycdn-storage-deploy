@@ -3,7 +3,7 @@ description: "BunnyCDN storage deployer"
 inputs:
   upload:
     description: "It will upload the files to storage if 'true' provided."
-    default: "false"
+    default: false
   source:
     description: "The source directory folder."
     required: true
@@ -24,13 +24,13 @@ inputs:
     description: "Is required for purging."
   purgePullZone:
     description: "It will purge the pull zone if true. pullZoneId and accessKey should be provided."
-    default: "false"
+    default: false
   purgePullZoneDelay:
     description: "The delay in seconds before purging the pull zone, to give storage time to replicate first."
     default: "0"
   remove:
     description: "It will remove the files from storage before uploading if 'true' provided."
-    default: "false"
+    default: false
 
 runs:
   using: "node20"
