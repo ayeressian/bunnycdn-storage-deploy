@@ -78,5 +78,5 @@ Number of retries on fail. Default is 5.
     remove: "true"
     purgePullZone: "true"
     purgePullZoneDelay: "5"
-    maxRetries: 5
+    maxRetries: "5"
 ```
