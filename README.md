@@ -74,4 +74,5 @@ Pull zone ID.
     remove: "true"
     purgePullZone: "true"
     purgePullZoneDelay: "5"
+    maxRetries: 5
 ```
