@@ -4557,6 +4557,7 @@ const uploader_1 = __importDefault(__webpack_require__(2732));
 const purge_1 = __importDefault(__webpack_require__(4483));
 const remove_1 = __importDefault(__webpack_require__(9914));
 class Main {
+    params;
     constructor() {
         this.params = this.getParams();
     }
@@ -4571,12 +4572,11 @@ class Main {
         }
     }
     getParams() {
-        var _a;
         const result = {
             source: (0, core_1.getInput)("source"),
             destination: (0, core_1.getInput)("destination"),
             storageZoneName: (0, core_1.getInput)("storageZoneName"),
-            storageEndpoint: (_a = (0, core_1.getInput)("storageEndpoint")) !== null && _a !== void 0 ? _a : "storage.bunnycdn.com",
+            storageEndpoint: (0, core_1.getInput)("storageEndpoint") ?? "storage.bunnycdn.com",
             storagePassword: (0, core_1.getInput)("storagePassword"),
             accessKey: (0, core_1.getInput)("accessKey"),
             pullZoneId: (0, core_1.getInput)("pullZoneId"),
@@ -4654,10 +4654,8 @@ class Main {
             throw new Error("Can't purge, maxRetries is negative.");
         }
         return maxRetries;
-        ``;
     }
 }
-``;
 new Main().run();
 
 
@@ -4671,6 +4669,7 @@ new Main().run();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RetryError = void 0;
 class RetryError extends Error {
+    err;
     constructor(err) {
         super();
         this.err = err;
@@ -4724,23 +4723,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -4769,11 +4758,9 @@ const purge = async (pullZoneId, accessKey, delay, maxRetries) => {
         }
         (0, core_1.info)("Cache successfully purged.");
     }, { until: maxRetries }).catch((err) => {
-        if (err.status) {
-            throw new Error(`Purging failed with the status code ${err.status}.`);
-        }
-        // @ts-expect-error
-        throw new Error(`Purging failed with network or cors error.`, { cause: err });
+        throw new Error(`Purging failed with the following error`, {
+            cause: err,
+        });
     });
 };
 exports["default"] = purge;
@@ -4802,23 +4789,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -4852,11 +4829,9 @@ const remove = async (destination, storageName, storagePassword, storageEndpoint
             (0, core_1.info)("Storage data successfully removed.");
         }
     }, { until: maxRetries }).catch((err) => {
-        if (err.status) {
-            throw new Error(`Removing storage data failed with the status code ${err.status}.`);
-        }
-        // @ts-expect-error
-        throw new Error(`Removing storage data failed with network or cors error.`, { cause: err });
+        throw new Error(`Removing storage data failed with following error`, {
+            cause: err,
+        });
     });
 };
 exports["default"] = remove;
@@ -4885,23 +4860,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -4914,6 +4879,13 @@ const p_queue_1 = __importDefault(__webpack_require__(8343));
 const promise_retry_1 = __importStar(__webpack_require__(1682));
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
 class Uploader {
+    path;
+    destination;
+    storageName;
+    storagePassword;
+    storageEndpoint;
+    maxRetries;
+    queue;
     constructor(path, destination, storageName, storagePassword, storageEndpoint, maxRetries) {
         this.path = path;
         this.destination = destination;
@@ -4949,11 +4921,9 @@ class Uploader {
             }
             return response;
         }, { until: this.maxRetries }).catch((err) => {
-            if (err.status) {
-                throw new Error(`Uploading ${entry.path} has failed width the status code ${err.status}.`);
-            }
-            // @ts-expect-error
-            throw new Error(`Uploading failed with network or cors error.`, { cause: err });
+            throw new Error(`Uploading failed with following error`, {
+                cause: err,
+            });
         });
     }
     async run() {

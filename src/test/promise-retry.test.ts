@@ -27,7 +27,7 @@ describe("promiseRetry", () => {
       throw new RetryError("test");
     });
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    await promiseRetry(fn, { attempt: 3 }).catch((err) => {});
+    await promiseRetry(fn, { until: 3 }).catch((err) => {});
 
     expect(fn).toHaveBeenCalledTimes(3);
   });
@@ -38,16 +38,19 @@ describe("promiseRetry", () => {
         () => {
           throw new RetryError("test");
         },
-        { attempt: 3 }
+        { until: 3 }
       )
     ).rejects.toThrow("test");
   });
 
   it("should throw on non retry error", () => {
     expect(
-      promiseRetry(() => {
-        throw "test";
-      })
+      promiseRetry(
+        () => {
+          throw "test";
+        },
+        { until: 1 }
+      )
     ).rejects.toThrow("test");
   });
 });
