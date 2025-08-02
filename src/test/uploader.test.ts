@@ -5,6 +5,8 @@ import nodeFetch, { Response } from "node-fetch";
 import fs, { ReadStream } from "fs";
 import PQueue from "p-queue";
 
+vi.mock("node-fetch");
+
 const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
 describe("Uploader", () => {
@@ -88,7 +90,6 @@ describe("Uploader", () => {
     let uploadFileMethod: (entry: readdirp.EntryInfo) => Promise<void>;
     const createReadStreamMock = vi.spyOn(fs, "createReadStream");
     createReadStreamMock.mockReturnValue(null as unknown as ReadStream);
-    vi.mock("node-fetch");
     const fetchMock = vi.mocked(nodeFetch);
     fetchMock.mockReturnValue(Promise.resolve({ status: 201 } as Response));
     vi.mock("@actions/core", () => ({
@@ -105,6 +106,7 @@ describe("Uploader", () => {
           storageEndpoint: "test",
           storageName: "test",
           storagePassword: "test",
+          maxRetries: 1,
         },
         { path: "Test", fullPath: "Test", basename: "Test" }
       );
@@ -128,6 +130,7 @@ describe("Uploader", () => {
               storageEndpoint: "test",
               storageName: "test",
               storagePassword: "test",
+              maxRetries: 5,
             },
             { path: "Test", fullPath: "Test", basename: "Test" }
           )

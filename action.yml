@@ -31,6 +31,9 @@ inputs:
   remove:
     description: "It will remove the files from storage before uploading if 'true' provided."
     default: "false"
+  maxRetries:
+    description: "Num of attempts for network operations, such as remove, upload and purge."
+    default: "5"
 
 runs:
   using: "node20"

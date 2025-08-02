@@ -14,7 +14,8 @@ export default class Uploader {
     private destination: string,
     private storageName: string,
     private storagePassword: string,
-    private storageEndpoint: string
+    private storageEndpoint: string,
+    private maxRetries: number
   ) {
     this.queue = new PQueue({ concurrency: NUM_OF_CONCURRENT_REQ });
   }
@@ -27,38 +28,38 @@ export default class Uploader {
     info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
     );
-    return promiseRetry(async (attempt) => {
-      const response = await fetch(
-        `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
-        {
-          method: "PUT",
-          headers: {
-            AccessKey: this.storagePassword,
-          },
-          body: readStream,
+    return promiseRetry(
+      async (attempt) => {
+        const response = await fetch(
+          `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
+          {
+            method: "PUT",
+            headers: {
+              AccessKey: this.storagePassword,
+            },
+            body: readStream,
+          }
+        ).catch((err) => {
+          warning(
+            `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`
+          );
+          throw new RetryError(err);
+        });
+        if (response.status === 201) {
+          info(`Successful deployment of ${entry.path}.`);
+        } else {
+          warning(
+            `Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`
+          );
+          throw new RetryError(response);
         }
-      ).catch((err) => {
-        warning(
-          `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`
-        );
-        throw new RetryError(err);
+        return response;
+      },
+      { until: this.maxRetries }
+    ).catch((err) => {
+      throw new Error(`Uploading failed with following error`, {
+        cause: err,
       });
-      if (response.status === 201) {
-        info(`Successful deployment of ${entry.path}.`);
-      } else {
-        warning(
-          `Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`
-        );
-        throw new RetryError(response);
-      }
-      return response;
-    }).catch((err) => {
-      if (err.status) {
-        throw new Error(
-          `Uploading ${entry.path} has failed width the status code ${err.status}.`
-        );
-      }
-      throw new Error(`Uploading failed with network or cors error.`);
     });
   }
 

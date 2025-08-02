@@ -16,6 +16,7 @@ type Params = {
   purgePullZoneDelay: string;
   removeFlag: string;
   uploadFlag: string;
+  maxRetries: string;
 };
 
 class Main {
@@ -49,6 +50,8 @@ class Main {
       purgePullZoneDelay: getInput("purgePullZoneDelay"),
       removeFlag: getInput("remove"),
       uploadFlag: getInput("upload"),
+
+      maxRetries: getInput("maxRetries")
     };
     result.source = isAbsolute(result.source)
       ? result.source
@@ -69,7 +72,8 @@ class Main {
         this.params.destination,
         this.params.storageZoneName,
         this.params.storagePassword,
-        this.params.storageEndpoint
+        this.params.storageEndpoint,
+        this.parseMaxRetriesParam(),
       );
     }
   }
@@ -94,7 +98,8 @@ class Main {
           this.params.destination,
           this.params.storageZoneName,
           this.params.storagePassword,
-          this.params.storageEndpoint
+          this.params.storageEndpoint,
+          this.parseMaxRetriesParam(),
         ).run();
       }
     }
@@ -123,10 +128,25 @@ class Main {
         await purge(
           this.params.pullZoneId,
           this.params.accessKey,
-          purgePullZoneDelay
+          purgePullZoneDelay,
+          this.parseMaxRetriesParam()
         );
       }
     }
+  }
+
+  private parseMaxRetriesParam() {
+    const maxRetries =
+      this.params.maxRetries !== "0"
+        ? parseInt(this.params.maxRetries, 10)
+        : 0;
+    if (isNaN(maxRetries)) {
+      throw new Error("Can't purge, maxRetries is not a number.");
+    }
+    if (maxRetries < 0) {
+      throw new Error("Can't purge, maxRetries is negative.");
+    }
+    return maxRetries;
   }
 }
 
