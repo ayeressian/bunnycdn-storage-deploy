@@ -58,6 +58,10 @@ The API key.
 
 Pull zone ID.
 
+### `maxRetries`
+
+Number of retries on fail. Default is 5.
+
 ## Example usage
 
 ```
