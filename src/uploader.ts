@@ -1,4 +1,5 @@
 import fs from "fs";
+import fsPromises from "fs/promises";
 import fetch from "node-fetch";
 import readdirp from "readdirp";
 import { info, warning } from "@actions/core";
@@ -6,6 +7,11 @@ import PQueue from "p-queue";
 import promiseRetry, { RetryError } from "./promise-retry";
 
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
+const PROGRESS_REPORT_INTERVAL_SEC = 5;
+
+function formatMiB(bytes: number): string {
+  return (bytes / 1024 / 1024).toFixed(2);
+}
 
 export default class Uploader {
   queue: PQueue;
@@ -21,27 +27,48 @@ export default class Uploader {
   }
 
   private async uploadFile(entry: readdirp.EntryInfo) {
-    const readStream = fs.createReadStream(entry.fullPath);
     const destination = this.destination
       ? `${this.destination}/${entry.path}`
       : entry.path;
     info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
     );
+    let progressInterval: NodeJS.Timeout | undefined = undefined;
     return promiseRetry(
       async (attempt) => {
+        const totalBytes = (await fsPromises.stat(entry.fullPath)).size;
+        let lastUploadedBytes = 0;
+        let uploadedBytes = 0;
+
+        const readStream = fs.createReadStream(entry.fullPath);
+        readStream.on('data', (chunk) => {
+          uploadedBytes += chunk.length;
+        });
+        if (progressInterval) {
+          clearInterval(progressInterval);
+        }
+        progressInterval = setInterval(() => {
+          const uploadedMiB = formatMiB(uploadedBytes);
+          const totalMiB = formatMiB(totalBytes);
+          const speedMiB = formatMiB((uploadedBytes - lastUploadedBytes) / PROGRESS_REPORT_INTERVAL_SEC);
+          info(`Deploying ${entry.path}: ${uploadedMiB}/${totalMiB} MiB - ${speedMiB} MiB/s`);
+          lastUploadedBytes = uploadedBytes;
+        }, PROGRESS_REPORT_INTERVAL_SEC * 1000);
+
         const response = await fetch(
           `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
           {
             method: "PUT",
             headers: {
               AccessKey: this.storagePassword,
+              'Content-Length': totalBytes.toString(),
             },
             body: readStream,
           }
         ).catch((err) => {
+          warning(err);
           warning(
-            `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`
+            `Upload failed with network or cors error (see above). Attempt number ${attempt}. Retrying...`
           );
           throw new RetryError(err);
         });
@@ -56,7 +83,15 @@ export default class Uploader {
         return response;
       },
       { until: this.maxRetries }
-    ).catch((err) => {
+    ).then((result) => {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
+      return result;
+    }).catch((err) => {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
       throw new Error(`Uploading failed with following error`, {
         cause: err,
       });
