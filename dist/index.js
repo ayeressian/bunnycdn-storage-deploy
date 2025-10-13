@@ -4902,12 +4902,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const fs_1 = __importDefault(__webpack_require__(9896));
+const promises_1 = __importDefault(__webpack_require__(1943));
 const node_fetch_1 = __importDefault(__webpack_require__(2065));
 const readdirp_1 = __importDefault(__webpack_require__(9084));
 const core_1 = __webpack_require__(6977);
 const p_queue_1 = __importDefault(__webpack_require__(8343));
 const promise_retry_1 = __importStar(__webpack_require__(1682));
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
+const PROGRESS_REPORT_INTERVAL_SEC = 5;
+function formatMiB(bytes) {
+    return (bytes / 1024 / 1024).toFixed(2);
+}
 class Uploader {
     path;
     destination;
@@ -4926,20 +4931,39 @@ class Uploader {
         this.queue = new p_queue_1.default({ concurrency: NUM_OF_CONCURRENT_REQ });
     }
     async uploadFile(entry) {
-        const readStream = fs_1.default.createReadStream(entry.fullPath);
         const destination = this.destination
             ? `${this.destination}/${entry.path}`
             : entry.path;
         (0, core_1.info)(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
+        let progressInterval = undefined;
         return (0, promise_retry_1.default)(async (attempt) => {
+            const totalBytes = (await promises_1.default.stat(entry.fullPath)).size;
+            let lastUploadedBytes = 0;
+            let uploadedBytes = 0;
+            const readStream = fs_1.default.createReadStream(entry.fullPath);
+            readStream.on('data', (chunk) => {
+                uploadedBytes += chunk.length;
+            });
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            progressInterval = setInterval(() => {
+                const uploadedMiB = formatMiB(uploadedBytes);
+                const totalMiB = formatMiB(totalBytes);
+                const speedMiB = formatMiB((uploadedBytes - lastUploadedBytes) / PROGRESS_REPORT_INTERVAL_SEC);
+                (0, core_1.info)(`Deploying ${entry.path}: ${uploadedMiB}/${totalMiB} MiB - ${speedMiB} MiB/s`);
+                lastUploadedBytes = uploadedBytes;
+            }, PROGRESS_REPORT_INTERVAL_SEC * 1000);
             const response = await (0, node_fetch_1.default)(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
                 method: "PUT",
                 headers: {
                     AccessKey: this.storagePassword,
+                    'Content-Length': totalBytes.toString(),
                 },
                 body: readStream,
             }).catch((err) => {
-                (0, core_1.warning)(`Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`);
+                (0, core_1.warning)(err);
+                (0, core_1.warning)(`Upload failed with network or cors error (see above). Attempt number ${attempt}. Retrying...`);
                 throw new promise_retry_1.RetryError(err);
             });
             if (response.status === 201) {
@@ -4950,7 +4974,15 @@ class Uploader {
                 throw new promise_retry_1.RetryError(response);
             }
             return response;
-        }, { until: this.maxRetries }).catch((err) => {
+        }, { until: this.maxRetries }).then((result) => {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            return result;
+        }).catch((err) => {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
             throw new Error(`Uploading failed with following error`, {
                 cause: err,
             });
@@ -9859,6 +9891,14 @@ module.exports = require("events");
 
 "use strict";
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ 1943:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs/promises");
 
 /***/ }),
 
