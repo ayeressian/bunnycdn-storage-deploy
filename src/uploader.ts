@@ -21,7 +21,6 @@ export default class Uploader {
   }
 
   private async uploadFile(entry: readdirp.EntryInfo) {
-    const readStream = fs.createReadStream(entry.fullPath);
     const destination = this.destination
       ? `${this.destination}/${entry.path}`
       : entry.path;
@@ -30,6 +29,7 @@ export default class Uploader {
     );
     return promiseRetry(
       async (attempt) => {
+        const readStream = fs.createReadStream(entry.fullPath);
         const response = await fetch(
           `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
           {
