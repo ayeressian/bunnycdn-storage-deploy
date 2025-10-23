@@ -4926,12 +4926,12 @@ class Uploader {
         this.queue = new p_queue_1.default({ concurrency: NUM_OF_CONCURRENT_REQ });
     }
     async uploadFile(entry) {
-        const readStream = fs_1.default.createReadStream(entry.fullPath);
         const destination = this.destination
             ? `${this.destination}/${entry.path}`
             : entry.path;
         (0, core_1.info)(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
         return (0, promise_retry_1.default)(async (attempt) => {
+            const readStream = fs_1.default.createReadStream(entry.fullPath);
             const response = await (0, node_fetch_1.default)(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
                 method: "PUT",
                 headers: {

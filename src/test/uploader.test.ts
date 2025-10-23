@@ -117,6 +117,7 @@ describe("Uploader", () => {
         fetchMock
           .mockClear()
           .mockReturnValue(Promise.resolve({ status: 500 } as Response));
+        createReadStreamMock.mockClear();
         const originalSetTimeout = global.setTimeout;
 
         //ignore timeout second argument to increase speed
