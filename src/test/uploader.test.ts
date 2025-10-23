@@ -139,6 +139,7 @@ describe("Uploader", () => {
         timeoutSpy.mockRestore();
 
         expect(fetchMock).toHaveBeenCalledTimes(5);
+        expect(createReadStreamMock).toHaveBeenCalledTimes(5);
       });
     });
   });
