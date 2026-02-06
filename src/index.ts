@@ -1,4 +1,4 @@
-import { getInput, setFailed, info, warning } from "@actions/core";
+import { getInput, setFailed, info } from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";

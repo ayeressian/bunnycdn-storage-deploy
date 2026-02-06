@@ -1,5 +1,5 @@
 import Uploader from "../uploader";
-import readdirp, { ReaddirpStream } from "readdirp";
+import readdirp, { EntryInfo, ReaddirpStream } from "readdirp";
 import { beforeEach, describe, it, vi, expect } from "vitest";
 import fs from "fs";
 import PQueue from "p-queue";
@@ -84,7 +84,7 @@ describe("Uploader", () => {
   });
 
   describe("uploadFile method", () => {
-    let uploadFileMethod: (entry: readdirp.EntryInfo) => Promise<void>;
+    let uploadFileMethod: (entry: EntryInfo) => Promise<void>;
     const createReadStreamMock = vi.spyOn(fs, "readFileSync");
     createReadStreamMock.mockReturnValue(null as unknown as NonSharedBuffer);
     global.fetch = vi.fn().mockResolvedValue({ status: 201 });

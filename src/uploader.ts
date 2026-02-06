@@ -1,5 +1,5 @@
 import fs from "fs";
-import readdirp from "readdirp";
+import readdirp, { EntryInfo } from "readdirp";
 import { info, warning } from "@actions/core";
 import PQueue from "p-queue";
 import promiseRetry, { RetryError } from "./promise-retry";
@@ -19,7 +19,7 @@ export default class Uploader {
     this.queue = new PQueue({ concurrency: NUM_OF_CONCURRENT_REQ });
   }
 
-  private async uploadFile(entry: readdirp.EntryInfo) {
+  private async uploadFile(entry: EntryInfo) {
     const destination = this.destination
       ? `${this.destination}/${entry.path}`
       : entry.path;
