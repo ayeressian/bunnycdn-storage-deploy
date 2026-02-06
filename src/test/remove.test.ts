@@ -1,8 +1,5 @@
 import { describe, it, vi, expect, afterEach } from "vitest";
-import nodeFetch, { Response } from "node-fetch";
 import remove from "../remove";
-
-vi.mock("node-fetch");
 
 describe("when calling remove function", () => {
   afterEach(() => {
@@ -11,47 +8,44 @@ describe("when calling remove function", () => {
   });
 
   it("should call remove API", async () => {
-    const fetchMock = vi.mocked(nodeFetch);
-    fetchMock.mockReturnValue(Promise.resolve({ status: 200 } as Response));
+    global.fetch = vi.fn().mockResolvedValue({ status: 200 });
     await remove("", "storageName", "key", "storage.bunnycdn.com", 1);
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenCalledWith(
       "https://storage.bunnycdn.com/storageName/",
-      expect.anything()
+      expect.anything(),
     );
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
   it("should be possible to call remove API with a destination", async () => {
-    const fetchMock = vi.mocked(nodeFetch);
-    fetchMock.mockReturnValue(Promise.resolve({ status: 200 } as Response));
+    global.fetch = vi.fn().mockResolvedValue({ status: 200 });
     await remove(
       "subfolder/folder2",
       "storageName",
       "key",
       "storage.bunnycdn.com",
-      1
+      1,
     );
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenCalledWith(
       "https://storage.bunnycdn.com/storageName/subfolder/folder2/",
-      expect.anything()
+      expect.anything(),
     );
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
   it("should be possible to call remove API with a destination that does not exist", async () => {
-    const fetchMock = vi.mocked(nodeFetch);
-    fetchMock.mockReturnValue(Promise.resolve({ status: 404 } as Response));
+    global.fetch = vi.fn().mockResolvedValue({ status: 404 });
     await remove(
       "subfolder/new-folder",
       "storageName",
       "key",
       "storage.bunnycdn.com",
-      1
+      1,
     );
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenCalledWith(
       "https://storage.bunnycdn.com/storageName/subfolder/new-folder/",
-      expect.anything()
+      expect.anything(),
     );
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 });

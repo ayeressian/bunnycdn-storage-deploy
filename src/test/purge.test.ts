@@ -1,18 +1,14 @@
 import { describe, it, vi, expect } from "vitest";
-import nodeFetch, { Response } from "node-fetch";
 import purge from "../purge";
-
-vi.mock("node-fetch");
 
 describe("when calling purge function", () => {
   it("should call purge API", async () => {
-    const fetchMock = vi.mocked(nodeFetch);
-    fetchMock.mockReturnValue(Promise.resolve({ status: 204 } as Response));
+    global.fetch = vi.fn().mockResolvedValue({ status: 204 });
     await purge("zoneId", "zoneKey", 0, 1);
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenCalledWith(
       "https://api.bunny.net/pullzone/zoneId/purgeCache",
-      expect.anything()
+      expect.anything(),
     );
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 });

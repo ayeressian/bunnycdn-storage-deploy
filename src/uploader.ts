@@ -1,5 +1,4 @@
 import fs from "fs";
-import fetch from "node-fetch";
 import readdirp from "readdirp";
 import { info, warning } from "@actions/core";
 import PQueue from "p-queue";
@@ -29,7 +28,7 @@ export default class Uploader {
     );
     return promiseRetry(
       async (attempt) => {
-        const readStream = fs.createReadStream(entry.fullPath);
+        const buffer = fs.readFileSync(entry.fullPath);
         const response = await fetch(
           `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
           {
@@ -37,9 +36,9 @@ export default class Uploader {
             headers: {
               AccessKey: this.storagePassword,
             },
-            body: readStream,
+            body: buffer,
           }
-        ).catch((err) => {
+        ).catch((err: unknown) => {
           warning(
             `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`
           );

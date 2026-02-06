@@ -1,11 +1,8 @@
 import Uploader from "../uploader";
 import readdirp, { ReaddirpStream } from "readdirp";
 import { beforeEach, describe, it, vi, expect } from "vitest";
-import nodeFetch, { Response } from "node-fetch";
-import fs, { ReadStream } from "fs";
+import fs from "fs";
 import PQueue from "p-queue";
-
-vi.mock("node-fetch");
 
 const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
@@ -29,7 +26,7 @@ describe("Uploader", () => {
             };
           }
         },
-      } as ReaddirpStream);
+      } as unknown as ReaddirpStream);
       const uploadFileMock = vi.fn((): Promise<void> => Promise.resolve());
       await runMethod.call({
         uploadFile: uploadFileMock,
@@ -66,7 +63,7 @@ describe("Uploader", () => {
             };
           }
         },
-      } as ReaddirpStream);
+      } as unknown as ReaddirpStream);
       const { promises, promiseResolves } = createPromises(3);
       const uploadFileMock = vi.fn();
       uploadFileMock.mockImplementationOnce(() => promises[0]);
@@ -88,10 +85,9 @@ describe("Uploader", () => {
 
   describe("uploadFile method", () => {
     let uploadFileMethod: (entry: readdirp.EntryInfo) => Promise<void>;
-    const createReadStreamMock = vi.spyOn(fs, "createReadStream");
-    createReadStreamMock.mockReturnValue(null as unknown as ReadStream);
-    const fetchMock = vi.mocked(nodeFetch);
-    fetchMock.mockReturnValue(Promise.resolve({ status: 201 } as Response));
+    const createReadStreamMock = vi.spyOn(fs, "readFileSync");
+    createReadStreamMock.mockReturnValue(null as unknown as NonSharedBuffer);
+    global.fetch = vi.fn().mockResolvedValue({ status: 201 });
     vi.mock("@actions/core", () => ({
       info: () => null,
       warning: () => null,
@@ -108,15 +104,13 @@ describe("Uploader", () => {
           storagePassword: "test",
           maxRetries: 1,
         },
-        { path: "Test", fullPath: "Test", basename: "Test" }
+        { path: "Test", fullPath: "Test", basename: "Test" },
       );
-      expect(fetchMock).toHaveBeenCalled();
+      expect(global.fetch).toHaveBeenCalled();
     });
     describe("when fetch request fails", () => {
       it("should attempt 5 times", async () => {
-        fetchMock
-          .mockClear()
-          .mockReturnValue(Promise.resolve({ status: 500 } as Response));
+        global.fetch = vi.fn().mockResolvedValue({ status: 500 });
         createReadStreamMock.mockClear();
         const originalSetTimeout = global.setTimeout;
 
@@ -133,13 +127,13 @@ describe("Uploader", () => {
               storagePassword: "test",
               maxRetries: 5,
             },
-            { path: "Test", fullPath: "Test", basename: "Test" }
+            { path: "Test", fullPath: "Test", basename: "Test" },
           )
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           .catch(() => {});
         timeoutSpy.mockRestore();
 
-        expect(fetchMock).toHaveBeenCalledTimes(5);
+        expect(global.fetch).toHaveBeenCalledTimes(5);
         expect(createReadStreamMock).toHaveBeenCalledTimes(5);
       });
     });

@@ -33,17 +33,16 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.1",
-    "@types/node-fetch": "^2.6.2",
-    "@typescript-eslint/eslint-plugin": "^5.37.0",
-    "@typescript-eslint/parser": "^5.37.0",
-    "eslint": "^8.23.1",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1",
-    "ts-loader": "^9.3.1",
-    "typescript": "^5.8.3",
-    "vitest": "^0.34.3",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18",
+    "webpack": "^5.105.0",
+    "webpack-cli": "^6.0.1"
   }
 }
