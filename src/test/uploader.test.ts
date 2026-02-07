@@ -1,12 +1,17 @@
 import Uploader from "../uploader";
 import readdirp, { EntryInfo, ReaddirpStream } from "readdirp";
-import { beforeEach, describe, it, vi, expect } from "vitest";
+import { beforeEach, describe, it, vi, expect, afterEach, Mock } from "vitest";
 import fs from "fs";
 import PQueue from "p-queue";
 
 const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
 describe("Uploader", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.resetAllMocks();
+    vi.unstubAllGlobals();
+  });
   describe("run method", () => {
     let runMethod: () => Promise<void>;
     beforeEach(() => {
@@ -85,17 +90,20 @@ describe("Uploader", () => {
 
   describe("uploadFile method", () => {
     let uploadFileMethod: (entry: EntryInfo) => Promise<void>;
-    const createReadStreamMock = vi.spyOn(fs, "readFileSync");
-    createReadStreamMock.mockReturnValue(null as unknown as NonSharedBuffer);
-    global.fetch = vi.fn().mockResolvedValue({ status: 201 });
-    vi.mock("@actions/core", () => ({
-      info: () => null,
-      warning: () => null,
-    }));
+    let createReadStreamMock: Mock;
     beforeEach(() => {
+      createReadStreamMock = vi.spyOn(fs, "readFileSync");
+      createReadStreamMock.mockReturnValue(null as unknown as NonSharedBuffer);
+      vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 201 }));
+      vi.mock("@actions/core", () => ({
+        info: () => null,
+        warning: () => null,
+      }));
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       uploadFileMethod = (Uploader as any).prototype.uploadFile;
     });
+
     it("should make fetch request", async () => {
       await uploadFileMethod.call(
         {
@@ -110,7 +118,7 @@ describe("Uploader", () => {
     });
     describe("when fetch request fails", () => {
       it("should attempt 5 times", async () => {
-        global.fetch = vi.fn().mockResolvedValue({ status: 500 });
+        vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 500 }));
         createReadStreamMock.mockClear();
         const originalSetTimeout = global.setTimeout;
 
