@@ -32553,7 +32553,7 @@ class Uploader {
             : entry.path;
         info(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
         return promise_retry(async (attempt) => {
-            const buffer = external_fs_default().readFileSync(entry.fullPath);
+            const buffer = await external_fs_default().promises.readFile(entry.fullPath);
             const response = await fetch(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
                 method: "PUT",
                 headers: {
@@ -32568,7 +32568,7 @@ class Uploader {
                 info(`Successful deployment of ${entry.path}.`);
             }
             else {
-                warning(`Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
+                warning(`Uploading ${entry.path} has failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
                 throw new RetryError(response);
             }
             return response;
@@ -32687,7 +32687,7 @@ class Main {
             purgePullZoneDelay: getInput("purgePullZoneDelay"),
             removeFlag: getInput("remove"),
             uploadFlag: getInput("upload"),
-            maxRetries: getInput("maxRetries")
+            maxRetries: getInput("maxRetries"),
         };
         result.source = (0,external_path_namespaceObject.isAbsolute)(result.source)
             ? result.source
@@ -32747,9 +32747,7 @@ class Main {
         }
     }
     parseMaxRetriesParam() {
-        const maxRetries = this.params.maxRetries !== "0"
-            ? parseInt(this.params.maxRetries, 10)
-            : 0;
+        const maxRetries = this.params.maxRetries !== "0" ? parseInt(this.params.maxRetries, 10) : 0;
         if (isNaN(maxRetries)) {
             throw new Error("Can't purge, maxRetries is not a number.");
         }
