@@ -11,7 +11,7 @@ const timeout = (time = 0) =>
 
 const promiseRetry = async <T>(
   fn: (attempt: number) => Promise<T>,
-  options: { until: number }
+  options: { until: number },
 ) => {
   const { until } = options;
   for (let i = 0; i < until; ++i) {

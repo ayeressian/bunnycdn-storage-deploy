@@ -14,7 +14,7 @@ export default class Uploader {
     private storageName: string,
     private storagePassword: string,
     private storageEndpoint: string,
-    private maxRetries: number
+    private maxRetries: number,
   ) {
     this.queue = new PQueue({ concurrency: NUM_OF_CONCURRENT_REQ });
   }
@@ -24,7 +24,7 @@ export default class Uploader {
       ? `${this.destination}/${entry.path}`
       : entry.path;
     info(
-      `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`
+      `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`,
     );
     return promiseRetry(
       async (attempt) => {
@@ -37,10 +37,10 @@ export default class Uploader {
               AccessKey: this.storagePassword,
             },
             body: buffer,
-          }
+          },
         ).catch((err: unknown) => {
           warning(
-            `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`
+            `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`,
           );
           throw new RetryError(err);
         });
@@ -48,13 +48,13 @@ export default class Uploader {
           info(`Successful deployment of ${entry.path}.`);
         } else {
           warning(
-            `Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`
+            `Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`,
           );
           throw new RetryError(response);
         }
         return response;
       },
-      { until: this.maxRetries }
+      { until: this.maxRetries },
     ).catch((err) => {
       throw new Error(`Uploading failed with following error`, {
         cause: err,
