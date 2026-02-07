@@ -48,7 +48,7 @@ export default class Uploader {
           info(`Successful deployment of ${entry.path}.`);
         } else {
           warning(
-            `Uploading ${entry.path} has failed width the status code ${response.status}. Attempt number ${attempt}. Retrying...`,
+            `Uploading ${entry.path} has failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`,
           );
           throw new RetryError(response);
         }

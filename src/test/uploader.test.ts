@@ -4,6 +4,11 @@ import { beforeEach, describe, it, vi, expect, afterEach, Mock } from "vitest";
 import fs from "fs";
 import PQueue from "p-queue";
 
+vi.mock("@actions/core", () => ({
+  info: () => null,
+  warning: () => null,
+}));
+
 const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
 describe("Uploader", () => {
@@ -90,17 +95,11 @@ describe("Uploader", () => {
 
   describe("uploadFile method", () => {
     let uploadFileMethod: (entry: EntryInfo) => Promise<void>;
-    let createReadStreamMock: Mock;
+    let readFileMock: Mock;
     beforeEach(() => {
-      createReadStreamMock = vi.spyOn(fs.promises, "readFile");
-      createReadStreamMock.mockResolvedValue(
-        null as unknown as NonSharedBuffer,
-      );
+      readFileMock = vi.spyOn(fs.promises, "readFile");
+      readFileMock.mockResolvedValue(null as unknown as NonSharedBuffer);
       vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 201 }));
-      vi.mock("@actions/core", () => ({
-        info: () => null,
-        warning: () => null,
-      }));
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       uploadFileMethod = (Uploader as any).prototype.uploadFile;
@@ -121,7 +120,7 @@ describe("Uploader", () => {
     describe("when fetch request fails", () => {
       it("should attempt 5 times", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 500 }));
-        createReadStreamMock.mockClear();
+        readFileMock.mockClear();
         const originalSetTimeout = global.setTimeout;
 
         //ignore timeout second argument to increase speed
@@ -144,7 +143,7 @@ describe("Uploader", () => {
         timeoutSpy.mockRestore();
 
         expect(global.fetch).toHaveBeenCalledTimes(5);
-        expect(createReadStreamMock).toHaveBeenCalledTimes(5);
+        expect(readFileMock).toHaveBeenCalledTimes(5);
       });
     });
   });
