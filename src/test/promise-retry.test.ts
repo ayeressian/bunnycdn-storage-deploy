@@ -1,16 +1,8 @@
-import {
-  describe,
-  it,
-  vi,
-  expect,
-  SpyInstance,
-  beforeAll,
-  afterAll,
-} from "vitest";
+import { describe, it, vi, expect, beforeAll, afterAll, Mock } from "vitest";
 import promiseRetry, { RetryError } from "../promise-retry";
 
 describe("promiseRetry", () => {
-  let timeoutSpy: SpyInstance;
+  let timeoutSpy: Mock;
   beforeAll(() => {
     //ignore timeout second argument to increase speed
     const originalSetTimeout = global.setTimeout;
@@ -27,7 +19,7 @@ describe("promiseRetry", () => {
       throw new RetryError("test");
     });
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    await promiseRetry(fn, { until: 3 }).catch((err) => {});
+    await promiseRetry(fn, { until: 3 }).catch(() => {});
 
     expect(fn).toHaveBeenCalledTimes(3);
   });
@@ -38,8 +30,8 @@ describe("promiseRetry", () => {
         () => {
           throw new RetryError("test");
         },
-        { until: 3 }
-      )
+        { until: 3 },
+      ),
     ).rejects.toThrow("test");
   });
 
@@ -49,8 +41,8 @@ describe("promiseRetry", () => {
         () => {
           throw "test";
         },
-        { until: 1 }
-      )
+        { until: 1 },
+      ),
     ).rejects.toThrow("test");
   });
 });

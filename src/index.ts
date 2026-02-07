@@ -1,4 +1,4 @@
-import { getInput, setFailed, info, warning } from "@actions/core";
+import { getInput, setFailed, info } from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";
@@ -51,7 +51,7 @@ class Main {
       removeFlag: getInput("remove"),
       uploadFlag: getInput("upload"),
 
-      maxRetries: getInput("maxRetries")
+      maxRetries: getInput("maxRetries"),
     };
     result.source = isAbsolute(result.source)
       ? result.source
@@ -91,7 +91,7 @@ class Main {
       }
       if (this.params.storageZoneName && this.params.storagePassword) {
         info(
-          `Uploading ${this.params.source} folder/file to storage ${this.params.storageZoneName}`
+          `Uploading ${this.params.source} folder/file to storage ${this.params.storageZoneName}`,
         );
         await new Uploader(
           this.params.source,
@@ -129,7 +129,7 @@ class Main {
           this.params.pullZoneId,
           this.params.accessKey,
           purgePullZoneDelay,
-          this.parseMaxRetriesParam()
+          this.parseMaxRetriesParam(),
         );
       }
     }
@@ -137,9 +137,7 @@ class Main {
 
   private parseMaxRetriesParam() {
     const maxRetries =
-      this.params.maxRetries !== "0"
-        ? parseInt(this.params.maxRetries, 10)
-        : 0;
+      this.params.maxRetries !== "0" ? parseInt(this.params.maxRetries, 10) : 0;
     if (isNaN(maxRetries)) {
       throw new Error("Can't purge, maxRetries is not a number.");
     }
