@@ -28,7 +28,7 @@ export default class Uploader {
     );
     return promiseRetry(
       async (attempt) => {
-        const buffer = fs.readFileSync(entry.fullPath);
+        const buffer = await fs.promises.readFile(entry.fullPath);
         const response = await fetch(
           `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
           {

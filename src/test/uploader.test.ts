@@ -92,8 +92,10 @@ describe("Uploader", () => {
     let uploadFileMethod: (entry: EntryInfo) => Promise<void>;
     let createReadStreamMock: Mock;
     beforeEach(() => {
-      createReadStreamMock = vi.spyOn(fs, "readFileSync");
-      createReadStreamMock.mockReturnValue(null as unknown as NonSharedBuffer);
+      createReadStreamMock = vi.spyOn(fs.promises, "readFile");
+      createReadStreamMock.mockResolvedValue(
+        null as unknown as NonSharedBuffer,
+      );
       vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 201 }));
       vi.mock("@actions/core", () => ({
         info: () => null,
