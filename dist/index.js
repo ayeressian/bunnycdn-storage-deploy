@@ -28448,6 +28448,7 @@ function escapeProperty(s) {
 //# sourceMappingURL=command.js.map
 ;// external "crypto"
 const external_crypto_namespaceObject = require("crypto");
+var external_crypto_default = /*#__PURE__*/__webpack_require__.n(external_crypto_namespaceObject);
 ;// external "fs"
 const external_fs_namespaceObject = require("fs");
 var external_fs_default = /*#__PURE__*/__webpack_require__.n(external_fs_namespaceObject);
@@ -32537,38 +32538,44 @@ class Uploader {
     storagePassword;
     storageEndpoint;
     maxRetries;
+    logger;
     queue;
-    constructor(path, destination, storageName, storagePassword, storageEndpoint, maxRetries) {
+    constructor(path, destination, storageName, storagePassword, storageEndpoint, maxRetries, logger) {
         this.path = path;
         this.destination = destination;
         this.storageName = storageName;
         this.storagePassword = storagePassword;
         this.storageEndpoint = storageEndpoint;
         this.maxRetries = maxRetries;
+        this.logger = logger;
         this.queue = new PQueue({ concurrency: NUM_OF_CONCURRENT_REQ });
     }
     async uploadFile(entry) {
         const destination = this.destination
             ? `${this.destination}/${entry.path}`
             : entry.path;
-        info(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
+        this.logger?.info(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
         return promise_retry(async (attempt) => {
             const buffer = await external_fs_default().promises.readFile(entry.fullPath);
+            const checksum = external_crypto_default().createHash("sha256")
+                .update(buffer)
+                .digest("hex");
             const response = await fetch(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
                 method: "PUT",
                 headers: {
                     AccessKey: this.storagePassword,
+                    Checksum: checksum,
                 },
                 body: buffer,
             }).catch((err) => {
-                warning(`Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`);
+                this.logger?.warning(`Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`);
                 throw new RetryError(err);
             });
             if (response.status === 201) {
-                info(`Successful deployment of ${entry.path}.`);
+                this.logger?.info(`Successful deployment of ${entry.path}.`);
             }
             else {
-                warning(`Uploading ${entry.path} has failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
+                this.logger?.warning(`Uploading ${entry.path} has failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
                 throw new RetryError(response);
             }
             return response;
@@ -32588,10 +32595,9 @@ class Uploader {
 
 ;// ./src/purge.ts
 
-
-const purge = async (pullZoneId, accessKey, delay, maxRetries) => {
+const purge = async (pullZoneId, accessKey, delay, maxRetries, logger) => {
     if (delay > 0) {
-        info(`Waiting ${delay} seconds before purging pull zone`);
+        logger?.info(`Waiting ${delay} seconds before purging pull zone`);
         await new Promise((resolve) => setTimeout(resolve, delay * 1000));
     }
     await promise_retry(async (attempt) => {
@@ -32601,14 +32607,14 @@ const purge = async (pullZoneId, accessKey, delay, maxRetries) => {
                 AccessKey: accessKey,
             },
         }).catch((err) => {
-            warning(`Purging failed with network or cors error. Attempt number ${attempt}. Retrying...`);
+            logger?.warning(`Purging failed with network or cors error. Attempt number ${attempt}. Retrying...`);
             throw new RetryError(err);
         });
         if (response.status !== 204) {
-            warning(`Purging failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
+            logger?.warning(`Purging failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
             throw new RetryError(response);
         }
-        info("Cache successfully purged.");
+        logger?.info("Cache successfully purged.");
     }, { until: maxRetries }).catch((err) => {
         throw new Error(`Purging failed with the following error`, {
             cause: err,
@@ -32619,11 +32625,10 @@ const purge = async (pullZoneId, accessKey, delay, maxRetries) => {
 
 ;// ./src/remove.ts
 
-
-const remove = async (destination, storageName, storagePassword, storageEndpoint, maxRetries) => {
+const remove = async (destination, storageName, storagePassword, storageEndpoint, maxRetries, logger) => {
     destination = destination ? `${destination}/` : "";
     const url = `https://${storageEndpoint}/${storageName}/${destination}`;
-    info(`Removing storage data with ${url}`);
+    logger?.info(`Removing storage data with ${url}`);
     await promise_retry(async (attempt) => {
         const response = await fetch(url, {
             method: "DELETE",
@@ -32631,19 +32636,19 @@ const remove = async (destination, storageName, storagePassword, storageEndpoint
                 AccessKey: storagePassword,
             },
         }).catch((err) => {
-            warning(`Removing storage data failed with network or cors error. Attempt number ${attempt}. Retrying...`);
+            logger?.warning(`Removing storage data failed with network or cors error. Attempt number ${attempt}. Retrying...`);
             throw new RetryError(err);
         });
         if (response.status === 404) {
-            info(`Destination not found: ${storageName}/${destination}`);
+            logger?.warning(`Destination not found: ${storageName}/${destination}`);
         }
         else if (response.status !== 200 && response.status !== 400) {
             // THERE IS A BUG IN API 400 IS VALID SOMETIMES
-            warning(`Removing storage data failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
+            logger?.warning(`Removing storage data failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`);
             throw new RetryError(response);
         }
         else {
-            info("Storage data successfully removed.");
+            logger?.info("Storage data successfully removed.");
         }
     }, { until: maxRetries }).catch((err) => {
         throw new Error(`Removing storage data failed with following error`, {
@@ -32703,7 +32708,7 @@ class Main {
                 throw new Error("Can't remove, storagePassword was not set.");
             }
             info(`Deleting files from storage ${this.params.storageZoneName}`);
-            await src_remove(this.params.destination, this.params.storageZoneName, this.params.storagePassword, this.params.storageEndpoint, this.parseMaxRetriesParam());
+            await src_remove(this.params.destination, this.params.storageZoneName, this.params.storagePassword, this.params.storageEndpoint, this.parseMaxRetriesParam(), { info: info, warning: warning });
         }
     }
     async upload() {
@@ -32719,7 +32724,7 @@ class Main {
             }
             if (this.params.storageZoneName && this.params.storagePassword) {
                 info(`Uploading ${this.params.source} folder/file to storage ${this.params.storageZoneName}`);
-                await new Uploader(this.params.source, this.params.destination, this.params.storageZoneName, this.params.storagePassword, this.params.storageEndpoint, this.parseMaxRetriesParam()).run();
+                await new Uploader(this.params.source, this.params.destination, this.params.storageZoneName, this.params.storagePassword, this.params.storageEndpoint, this.parseMaxRetriesParam(), { info: info, warning: warning }).run();
             }
         }
     }
@@ -32742,7 +32747,7 @@ class Main {
             }
             if (this.params.pullZoneId && this.params.accessKey) {
                 info(`Purging pull zone with the id ${this.params.pullZoneId}`);
-                await src_purge(this.params.pullZoneId, this.params.accessKey, purgePullZoneDelay, this.parseMaxRetriesParam());
+                await src_purge(this.params.pullZoneId, this.params.accessKey, purgePullZoneDelay, this.parseMaxRetriesParam(), { info: info, warning: warning });
             }
         }
     }
