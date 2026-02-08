@@ -30,13 +30,10 @@ export default class Uploader {
     this.logger?.info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`,
     );
+    const buffer = await fs.promises.readFile(entry.fullPath);
+    const checksum = crypto.createHash("sha256").update(buffer).digest("hex");
     return promiseRetry(
       async (attempt) => {
-        const buffer = await fs.promises.readFile(entry.fullPath);
-        const checksum = crypto
-          .createHash("sha256")
-          .update(buffer)
-          .digest("hex");
         const response = await fetch(
           `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
           {

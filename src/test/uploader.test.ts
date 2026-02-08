@@ -128,9 +128,8 @@ describe("Uploader", () => {
       expect(global.fetch).toHaveBeenCalled();
     });
     describe("when fetch request fails", () => {
-      it.only("should attempt 5 times", async () => {
+      it("should attempt 5 times", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 500 }));
-        readFileMock.mockClear();
         const originalSetTimeout = global.setTimeout;
 
         //ignore timeout second argument to increase speed
@@ -153,7 +152,6 @@ describe("Uploader", () => {
         timeoutSpy.mockRestore();
 
         expect(global.fetch).toHaveBeenCalledTimes(5);
-        expect(readFileMock).toHaveBeenCalledTimes(5);
       });
     });
   });
