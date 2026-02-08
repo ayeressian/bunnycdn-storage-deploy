@@ -7,10 +7,7 @@
     "test": "vitest --dir src/test",
     "e2e": "vitest --dir src/e2e",
     "build": "webpack",
-    "build-watch": "webpack --watch",
-    "e2e-upload": "tsx --env-file=.env src/e2e/uploader.e2e.ts",
-    "e2e-remove": "tsx --env-file=.env src/e2e/remove.e2e.ts",
-    "e2e-purge": "tsx --env-file=.env src/e2e/purge.e2e.ts"
+    "build-watch": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -31,8 +28,7 @@
     "@actions/core": "^3.0.0",
     "@actions/github": "^9.0.0",
     "p-queue": "^9.1.0",
-    "readdirp": "^5.0.0",
-    "tsx": "^4.21.0"
+    "readdirp": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
