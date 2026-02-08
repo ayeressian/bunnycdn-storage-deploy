@@ -15,7 +15,7 @@ jobs:
       - name: Deploy
         uses: ayeressian/bunnycdn-storage-deploy@master
         with:
-          source: "e2e/test-dir"
+          source: "src/e2e/test-dir"
           storageZoneName: "${{ secrets.STORAGE_NAME_TEST }}"
           storagePassword: "${{ secrets.STORAGE_PASSWORD_TEST }}"
           accessKey: "${{ secrets.ACCESS_KEY_TEST }}"

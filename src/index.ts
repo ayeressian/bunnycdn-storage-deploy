@@ -1,4 +1,4 @@
-import { getInput, setFailed, info } from "@actions/core";
+import { getInput, setFailed, info, warning } from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";
@@ -74,6 +74,7 @@ class Main {
         this.params.storagePassword,
         this.params.storageEndpoint,
         this.parseMaxRetriesParam(),
+        { info, warning },
       );
     }
   }
@@ -100,6 +101,7 @@ class Main {
           this.params.storagePassword,
           this.params.storageEndpoint,
           this.parseMaxRetriesParam(),
+          { info, warning },
         ).run();
       }
     }
@@ -130,6 +132,7 @@ class Main {
           this.params.accessKey,
           purgePullZoneDelay,
           this.parseMaxRetriesParam(),
+          { info, warning },
         );
       }
     }
