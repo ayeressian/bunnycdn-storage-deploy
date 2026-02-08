@@ -4,7 +4,7 @@ import remove from "../remove";
 
 loadEnvFile();
 
-const storageEndpoint = process.env.STORAGE_ENDPOINT || 'storage.bunnycdn.com';
+const storageEndpoint = process.env.STORAGE_ENDPOINT || "storage.bunnycdn.com";
 const storagePass = process.env.STORAGE_PASSWORD;
 const storageName = process.env.STORAGE_NAME;
 
