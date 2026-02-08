@@ -1,8 +1,8 @@
 import fs from "fs";
 import readdirp, { EntryInfo } from "readdirp";
-import { info, warning } from "@actions/core";
 import PQueue from "p-queue";
 import promiseRetry, { RetryError } from "./promise-retry";
+import crypto from "crypto";
 
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
 
@@ -15,6 +15,10 @@ export default class Uploader {
     private storagePassword: string,
     private storageEndpoint: string,
     private maxRetries: number,
+    private logger?: {
+      info: (message: string) => void;
+      warning: (message: string) => void;
+    },
   ) {
     this.queue = new PQueue({ concurrency: NUM_OF_CONCURRENT_REQ });
   }
@@ -23,31 +27,33 @@ export default class Uploader {
     const destination = this.destination
       ? `${this.destination}/${entry.path}`
       : entry.path;
-    info(
+    this.logger?.info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`,
     );
+    const buffer = await fs.promises.readFile(entry.fullPath);
+    const checksum = crypto.createHash("sha256").update(buffer).digest("hex");
     return promiseRetry(
       async (attempt) => {
-        const buffer = await fs.promises.readFile(entry.fullPath);
         const response = await fetch(
           `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
           {
             method: "PUT",
             headers: {
               AccessKey: this.storagePassword,
+              Checksum: checksum,
             },
             body: buffer,
           },
         ).catch((err: unknown) => {
-          warning(
+          this.logger?.warning(
             `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`,
           );
           throw new RetryError(err);
         });
         if (response.status === 201) {
-          info(`Successful deployment of ${entry.path}.`);
+          this.logger?.info(`Successful deployment of ${entry.path}.`);
         } else {
-          warning(
+          this.logger?.warning(
             `Uploading ${entry.path} has failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`,
           );
           throw new RetryError(response);

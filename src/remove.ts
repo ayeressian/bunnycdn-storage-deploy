@@ -1,4 +1,3 @@
-import { info, warning } from "@actions/core";
 import promiseRetry, { RetryError } from "./promise-retry";
 
 const remove = async (
@@ -7,10 +6,14 @@ const remove = async (
   storagePassword: string,
   storageEndpoint: string,
   maxRetries: number,
+  logger?: {
+    info: (message: string) => void;
+    warning: (message: string) => void;
+  },
 ) => {
   destination = destination ? `${destination}/` : "";
   const url = `https://${storageEndpoint}/${storageName}/${destination}`;
-  info(`Removing storage data with ${url}`);
+  logger?.info(`Removing storage data with ${url}`);
 
   await promiseRetry(
     async (attempt) => {
@@ -20,22 +23,22 @@ const remove = async (
           AccessKey: storagePassword,
         },
       }).catch((err: unknown) => {
-        warning(
+        logger?.warning(
           `Removing storage data failed with network or cors error. Attempt number ${attempt}. Retrying...`,
         );
         throw new RetryError(err);
       });
 
       if (response.status === 404) {
-        info(`Destination not found: ${storageName}/${destination}`);
+        logger?.warning(`Destination not found: ${storageName}/${destination}`);
       } else if (response.status !== 200 && response.status !== 400) {
         // THERE IS A BUG IN API 400 IS VALID SOMETIMES
-        warning(
+        logger?.warning(
           `Removing storage data failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`,
         );
         throw new RetryError(response);
       } else {
-        info("Storage data successfully removed.");
+        logger?.info("Storage data successfully removed.");
       }
     },
     { until: maxRetries },

@@ -3,15 +3,20 @@ import readdirp, { EntryInfo, ReaddirpStream } from "readdirp";
 import { beforeEach, describe, it, vi, expect, afterEach, Mock } from "vitest";
 import fs from "fs";
 import PQueue from "p-queue";
-
-vi.mock("@actions/core", () => ({
-  info: () => null,
-  warning: () => null,
-}));
+import crypto from "crypto";
 
 const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
 describe("Uploader", () => {
+  beforeEach(() => {
+    // Mock crypto.createHash chain
+    vi.spyOn(crypto, "createHash").mockReturnValue({
+      update: () => ({
+        digest: () =>
+          "0000000000000000000000000000000000000000000000000000000000000000",
+      }),
+    } as unknown as crypto.Hash);
+  });
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetAllMocks();
@@ -120,7 +125,6 @@ describe("Uploader", () => {
     describe("when fetch request fails", () => {
       it("should attempt 5 times", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 500 }));
-        readFileMock.mockClear();
         const originalSetTimeout = global.setTimeout;
 
         //ignore timeout second argument to increase speed
@@ -143,7 +147,6 @@ describe("Uploader", () => {
         timeoutSpy.mockRestore();
 
         expect(global.fetch).toHaveBeenCalledTimes(5);
-        expect(readFileMock).toHaveBeenCalledTimes(5);
       });
     });
   });

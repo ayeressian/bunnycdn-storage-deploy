@@ -1,4 +1,3 @@
-import { info, warning } from "@actions/core";
 import promiseRetry, { RetryError } from "./promise-retry";
 
 const purge = async (
@@ -6,9 +5,13 @@ const purge = async (
   accessKey: string,
   delay: number,
   maxRetries: number,
+  logger?: {
+    info: (message: string) => void;
+    warning: (message: string) => void;
+  },
 ) => {
   if (delay > 0) {
-    info(`Waiting ${delay} seconds before purging pull zone`);
+    logger?.info(`Waiting ${delay} seconds before purging pull zone`);
     await new Promise((resolve) => setTimeout(resolve, delay * 1000));
   }
   await promiseRetry(
@@ -22,18 +25,18 @@ const purge = async (
           },
         },
       ).catch((err: unknown) => {
-        warning(
+        logger?.warning(
           `Purging failed with network or cors error. Attempt number ${attempt}. Retrying...`,
         );
         throw new RetryError(err);
       });
       if (response.status !== 204) {
-        warning(
+        logger?.warning(
           `Purging failed with the status code ${response.status}. Attempt number ${attempt}. Retrying...`,
         );
         throw new RetryError(response);
       }
-      info("Cache successfully purged.");
+      logger?.info("Cache successfully purged.");
     },
     { until: maxRetries },
   ).catch((err) => {
