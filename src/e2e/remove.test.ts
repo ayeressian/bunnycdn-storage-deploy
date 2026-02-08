@@ -4,6 +4,7 @@ import remove from "../remove";
 
 loadEnvFile();
 
+const storageEndpoint = process.env.STORAGE_ENDPOINT || 'storage.bunnycdn.com';
 const storagePass = process.env.STORAGE_PASSWORD;
 const storageName = process.env.STORAGE_NAME;
 
@@ -15,7 +16,7 @@ describe("remove e2e", () => {
     const logs = { info: vi.fn(console.log), warning: vi.fn(console.error) };
     await remove("", storageName, storagePass, "storage.bunnycdn.com", 5, logs);
     expect(logs.info).toBeCalledWith(
-      "Removing storage data with https://storage.bunnycdn.com/test-storage-zone2/",
+      `Removing storage data with https://${storageEndpoint}/${storageName}/`,
     );
     expect(logs.info).toBeCalledWith("Storage data successfully removed.");
     expect(logs.warning).toBeCalledTimes(0);

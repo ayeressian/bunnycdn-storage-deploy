@@ -4,6 +4,7 @@ import Uploader from "../uploader";
 
 loadEnvFile();
 
+const storageEndpoint = process.env.STORAGE_ENDPOINT || 'storage.bunnycdn.com';
 const storagePass = process.env.STORAGE_PASSWORD;
 const storageName = process.env.STORAGE_NAME;
 
@@ -18,20 +19,20 @@ describe("upload e2e", () => {
       "",
       storageName,
       storagePass,
-      "storage.bunnycdn.com",
+      storageEndpoint,
       5,
       logs,
     );
 
     await uploader.run();
     expect(logs.info).toBeCalledWith(
-      "Deploying test-file.txt by https://storage.bunnycdn.com/test-storage-zone2/test-file.txt",
+      `Deploying test-file.txt by https://${storageEndpoint}/${storageName}/test-file.txt`,
     );
     expect(logs.info).toBeCalledWith(
-      "Deploying test-file2.txt by https://storage.bunnycdn.com/test-storage-zone2/test-file2.txt",
+      `Deploying test-file2.txt by https://${storageEndpoint}/${storageName}/test-file2.txt`,
     );
     expect(logs.info).toBeCalledWith(
-      "Deploying nested/test-file3.txt by https://storage.bunnycdn.com/test-storage-zone2/nested/test-file3.txt",
+      `Deploying nested/test-file3.txt by https://${storageEndpoint}/${storageName}/nested/test-file3.txt`,
     );
 
     expect(logs.info).toBeCalledWith(

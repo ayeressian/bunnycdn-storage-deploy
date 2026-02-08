@@ -41,7 +41,7 @@ class Main {
       source: getInput("source"),
       destination: getInput("destination"),
       storageZoneName: getInput("storageZoneName"),
-      storageEndpoint: getInput("storageEndpoint") ?? "storage.bunnycdn.com",
+      storageEndpoint: getInput("storageEndpoint") || "storage.bunnycdn.com",
       storagePassword: getInput("storagePassword"),
       accessKey: getInput("accessKey"),
       pullZoneId: getInput("pullZoneId"),
