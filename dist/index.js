@@ -32555,11 +32555,9 @@ class Uploader {
             ? `${this.destination}/${entry.path}`
             : entry.path;
         this.logger?.info(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
+        const buffer = await external_fs_default().promises.readFile(entry.fullPath);
+        const checksum = external_crypto_default().createHash("sha256").update(buffer).digest("hex");
         return promise_retry(async (attempt) => {
-            const buffer = await external_fs_default().promises.readFile(entry.fullPath);
-            const checksum = external_crypto_default().createHash("sha256")
-                .update(buffer)
-                .digest("hex");
             const response = await fetch(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
                 method: "PUT",
                 headers: {
@@ -32684,7 +32682,7 @@ class Main {
             source: getInput("source"),
             destination: getInput("destination"),
             storageZoneName: getInput("storageZoneName"),
-            storageEndpoint: getInput("storageEndpoint") ?? "storage.bunnycdn.com",
+            storageEndpoint: getInput("storageEndpoint") || "storage.bunnycdn.com",
             storagePassword: getInput("storagePassword"),
             accessKey: getInput("accessKey"),
             pullZoneId: getInput("pullZoneId"),
