@@ -11,7 +11,7 @@ if (!storageName) throw new Error("STORAGE_NAME env missing");
 if (!storagePass) throw new Error("STORAGE_PASSWORD env missing");
 
 describe("upload e2e", () => {
-  it("should successfuly upload", async () => {
+  it("should successfully upload", async () => {
     const logs = { info: vi.fn(console.log), warning: vi.fn(console.error) };
     const uploader = new Uploader(
       "./src/e2e/test-dir",

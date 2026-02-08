@@ -11,7 +11,7 @@ if (!storageName) throw new Error("STORAGE_NAME env missing");
 if (!storagePass) throw new Error("STORAGE_PASSWORD env missing");
 
 describe("remove e2e", () => {
-  it("should successfuly remove", async () => {
+  it("should successfully remove", async () => {
     const logs = { info: vi.fn(console.log), warning: vi.fn(console.error) };
     await remove("", storageName, storagePass, "storage.bunnycdn.com", 5, logs);
     expect(logs.info).toBeCalledWith(

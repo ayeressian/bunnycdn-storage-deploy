@@ -10,7 +10,7 @@ if (!zoneId) throw new Error("ZONE_ID env missing");
 if (!accessKey) throw new Error("ACCESS_KEY env missing");
 
 describe("purge e2e", () => {
-  it("should successfuly purge", async () => {
+  it("should successfully purge", async () => {
     const logs = { info: vi.fn(console.log), warning: vi.fn(console.error) };
     await purge(zoneId, accessKey, 0, 5, logs);
     expect(logs.info).toBeCalledWith("Cache successfully purged.");
