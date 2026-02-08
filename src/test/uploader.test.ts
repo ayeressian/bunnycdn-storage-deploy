@@ -5,11 +5,6 @@ import fs from "fs";
 import PQueue from "p-queue";
 import crypto from "crypto";
 
-vi.mock("@actions/core", () => ({
-  info: () => null,
-  warning: () => null,
-}));
-
 const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
 describe("Uploader", () => {
