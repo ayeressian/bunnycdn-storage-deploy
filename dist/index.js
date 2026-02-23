@@ -32752,10 +32752,10 @@ class Main {
     parseMaxRetriesParam() {
         const maxRetries = this.params.maxRetries !== "0" ? parseInt(this.params.maxRetries, 10) : 0;
         if (isNaN(maxRetries)) {
-            throw new Error("Can't purge, maxRetries is not a number.");
+            throw new Error("Can't continue, maxRetries is not a number.");
         }
         if (maxRetries < 0) {
-            throw new Error("Can't purge, maxRetries is negative.");
+            throw new Error("Can't continue, maxRetries is negative.");
         }
         return maxRetries;
     }

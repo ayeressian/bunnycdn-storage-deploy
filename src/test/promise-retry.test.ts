@@ -24,8 +24,8 @@ describe("promiseRetry", () => {
     expect(fn).toHaveBeenCalledTimes(3);
   });
 
-  it("should throw error on retry attempt finish", () => {
-    expect(
+  it("should throw error on retry attempt finish", async () => {
+    await expect(
       promiseRetry(
         () => {
           throw new RetryError("test");
@@ -35,8 +35,8 @@ describe("promiseRetry", () => {
     ).rejects.toThrow("test");
   });
 
-  it("should throw on non retry error", () => {
-    expect(
+  it("should throw on non retry error", async () => {
+    await expect(
       promiseRetry(
         () => {
           throw "test";
