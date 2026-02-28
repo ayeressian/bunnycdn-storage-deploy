@@ -66,7 +66,7 @@ Number of retries on fail. Default is 5.
 
 ```
 - name: Deploy to BunnyCDN
-  uses: ayeressian/bunnycdn-storage-deploy@v2.4.4
+  uses: ayeressian/bunnycdn-storage-deploy@v2.4.5
   with:
     source: "dist"
     destination: "www"

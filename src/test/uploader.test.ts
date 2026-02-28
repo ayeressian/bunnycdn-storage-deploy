@@ -3,20 +3,11 @@ import readdirp, { EntryInfo, ReaddirpStream } from "readdirp";
 import { beforeEach, describe, it, vi, expect, afterEach, Mock } from "vitest";
 import fs from "fs";
 import PQueue from "p-queue";
-import crypto from "crypto";
+import { Readable } from "stream";
 
 const timer = async (t = 0) => new Promise((resolve) => setTimeout(resolve, t));
 
 describe("Uploader", () => {
-  beforeEach(() => {
-    // Mock crypto.createHash chain
-    vi.spyOn(crypto, "createHash").mockReturnValue({
-      update: () => ({
-        digest: () =>
-          "0000000000000000000000000000000000000000000000000000000000000000",
-      }),
-    } as unknown as crypto.Hash);
-  });
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetAllMocks();
@@ -100,14 +91,23 @@ describe("Uploader", () => {
 
   describe("uploadFile method", () => {
     let uploadFileMethod: (entry: EntryInfo) => Promise<void>;
-    let readFileMock: Mock;
+    let calculateChecksumMethod: (fullPath: string) => Promise<string>;
+    let createReadStreamMock: Mock;
+    let toWebMock: Mock;
+    let bodyStream: import("stream/web").ReadableStream;
     beforeEach(() => {
-      readFileMock = vi.spyOn(fs.promises, "readFile");
-      readFileMock.mockResolvedValue(null as unknown as NonSharedBuffer);
+      createReadStreamMock = vi.spyOn(fs, "createReadStream");
+      createReadStreamMock.mockImplementation(
+        () => Readable.from(["stream-body"]) as fs.ReadStream,
+      );
+      bodyStream = {} as import("stream/web").ReadableStream;
+      toWebMock = vi.spyOn(Readable, "toWeb").mockReturnValue(bodyStream);
       vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 201 }));
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       uploadFileMethod = (Uploader as any).prototype.uploadFile;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      calculateChecksumMethod = (Uploader as any).prototype.calculateChecksum;
     });
 
     it("should make fetch request", async () => {
@@ -117,10 +117,26 @@ describe("Uploader", () => {
           storageName: "test",
           storagePassword: "test",
           maxRetries: 1,
+          calculateChecksum: calculateChecksumMethod,
         },
         { path: "Test", fullPath: "Test", basename: "Test" },
       );
       expect(global.fetch).toHaveBeenCalled();
+      expect(createReadStreamMock).toHaveBeenCalledWith("Test");
+      expect(global.fetch).toHaveBeenCalledWith(
+        "https://test/test/Test",
+        expect.objectContaining({
+          method: "PUT",
+          headers: {
+            AccessKey: "test",
+            Checksum:
+              "C762FFC75EBED99207B6DF46AC412A60665DBE9BFCDAA0C01560CD13FF30E32F",
+          },
+          body: bodyStream,
+          duplex: "half",
+        }),
+      );
+      expect(toWebMock).toHaveBeenCalledTimes(1);
     });
     describe("when fetch request fails", () => {
       it("should attempt 5 times", async () => {
@@ -139,6 +155,7 @@ describe("Uploader", () => {
               storageName: "test",
               storagePassword: "test",
               maxRetries: 5,
+              calculateChecksum: calculateChecksumMethod,
             },
             { path: "Test", fullPath: "Test", basename: "Test" },
           )
@@ -147,6 +164,8 @@ describe("Uploader", () => {
         timeoutSpy.mockRestore();
 
         expect(global.fetch).toHaveBeenCalledTimes(5);
+        expect(createReadStreamMock).toHaveBeenCalledTimes(6);
+        expect(toWebMock).toHaveBeenCalledTimes(5);
       });
     });
   });

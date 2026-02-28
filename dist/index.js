@@ -31293,6 +31293,8 @@ function getIDToken(aud) {
  */
 
 //# sourceMappingURL=core.js.map
+;// external "stream"
+const external_stream_namespaceObject = require("stream");
 ;// external "node:fs/promises"
 const promises_namespaceObject = require("node:fs/promises");
 ;// external "node:path"
@@ -32530,6 +32532,7 @@ const promiseRetry = async (fn, options) => {
 
 
 
+
 const NUM_OF_CONCURRENT_REQ = 75; // https://docs.bunny.net/reference/api-limits
 class Uploader {
     path;
@@ -32555,17 +32558,24 @@ class Uploader {
             ? `${this.destination}/${entry.path}`
             : entry.path;
         this.logger?.info(`Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`);
-        const buffer = await external_fs_default().promises.readFile(entry.fullPath);
-        const checksum = external_crypto_default().createHash("sha256").update(buffer).digest("hex");
+        const checksum = await this.calculateChecksum(entry.fullPath).catch((err) => {
+            throw new Error(`Calculating checksum failed`, {
+                cause: err,
+            });
+        });
         return promise_retry(async (attempt) => {
-            const response = await fetch(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, {
+            const fileStream = external_fs_default().createReadStream(entry.fullPath);
+            const body = external_stream_namespaceObject.Readable.toWeb(fileStream);
+            const requestInit = {
                 method: "PUT",
                 headers: {
                     AccessKey: this.storagePassword,
                     Checksum: checksum,
                 },
-                body: buffer,
-            }).catch((err) => {
+                body,
+                duplex: "half",
+            };
+            const response = await fetch(`https://${this.storageEndpoint}/${this.storageName}/${destination}`, requestInit).catch((err) => {
                 this.logger?.warning(`Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`);
                 throw new RetryError(err);
             });
@@ -32582,6 +32592,13 @@ class Uploader {
                 cause: err,
             });
         });
+    }
+    async calculateChecksum(fullPath) {
+        const hash = external_crypto_default().createHash("sha256");
+        for await (const chunk of external_fs_default().createReadStream(fullPath)) {
+            hash.update(chunk);
+        }
+        return hash.digest("hex").toUpperCase();
     }
     async run() {
         for await (const entry of node_modules_readdirp(this.path)) {

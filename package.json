@@ -1,11 +1,11 @@
 {
   "name": "bunnycdn-storage-deploy",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "test": "vitest --dir src/test",
-    "e2e": "vitest --dir src/e2e",
+    "e2e": "vitest --dir src/e2e --testTimeout=20000 --fileParallelism=false",
     "build": "webpack",
     "build-watch": "webpack --watch"
   },

@@ -1,4 +1,5 @@
 import fs from "fs";
+import { Readable } from "stream";
 import readdirp, { EntryInfo } from "readdirp";
 import PQueue from "p-queue";
 import promiseRetry, { RetryError } from "./promise-retry";
@@ -30,20 +31,29 @@ export default class Uploader {
     this.logger?.info(
       `Deploying ${entry.path} by https://${this.storageEndpoint}/${this.storageName}/${destination}`,
     );
-    const buffer = await fs.promises.readFile(entry.fullPath);
-    const checksum = crypto.createHash("sha256").update(buffer).digest("hex");
+    const checksum = await this.calculateChecksum(entry.fullPath).catch(
+      (err) => {
+        throw new Error(`Calculating checksum failed`, {
+          cause: err,
+        });
+      },
+    );
     return promiseRetry(
       async (attempt) => {
+        const fileStream = fs.createReadStream(entry.fullPath);
+        const body = Readable.toWeb(fileStream) as ReadableStream;
+        const requestInit: RequestInit & { duplex: "half" } = {
+          method: "PUT",
+          headers: {
+            AccessKey: this.storagePassword,
+            Checksum: checksum,
+          },
+          body,
+          duplex: "half",
+        };
         const response = await fetch(
           `https://${this.storageEndpoint}/${this.storageName}/${destination}`,
-          {
-            method: "PUT",
-            headers: {
-              AccessKey: this.storagePassword,
-              Checksum: checksum,
-            },
-            body: buffer,
-          },
+          requestInit,
         ).catch((err: unknown) => {
           this.logger?.warning(
             `Uploading failed with network or cors error. Attempt number ${attempt}. Retrying...`,
@@ -66,6 +76,14 @@ export default class Uploader {
         cause: err,
       });
     });
+  }
+
+  private async calculateChecksum(fullPath: string) {
+    const hash = crypto.createHash("sha256");
+    for await (const chunk of fs.createReadStream(fullPath)) {
+      hash.update(chunk);
+    }
+    return hash.digest("hex").toUpperCase();
   }
 
   async run() {
