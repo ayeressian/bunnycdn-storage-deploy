@@ -1,4 +1,11 @@
-import { getInput, setFailed, setSecret, info, warning } from "@actions/core";
+import {
+  getInput,
+  getBooleanInput,
+  setFailed,
+  setSecret,
+  info,
+  warning,
+} from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";
@@ -12,10 +19,10 @@ type Params = {
   storagePassword: string;
   accessKey: string;
   pullZoneId: string;
-  purgePullZoneFlag: string;
+  purgePullZoneFlag: boolean;
   purgePullZoneDelay: string;
-  removeFlag: string;
-  uploadFlag: string;
+  removeFlag: boolean;
+  uploadFlag: boolean;
   maxRetries: string;
 };
 
@@ -50,10 +57,10 @@ class Main {
       accessKey,
       pullZoneId: getInput("pullZoneId"),
 
-      purgePullZoneFlag: getInput("purgePullZone"),
+      purgePullZoneFlag: getBooleanInput("purgePullZone"),
       purgePullZoneDelay: getInput("purgePullZoneDelay"),
-      removeFlag: getInput("remove"),
-      uploadFlag: getInput("upload"),
+      removeFlag: getBooleanInput("remove"),
+      uploadFlag: getBooleanInput("upload"),
 
       maxRetries: getInput("maxRetries"),
     };
@@ -64,7 +71,7 @@ class Main {
   }
 
   private async remove() {
-    if (this.params.removeFlag === "true") {
+    if (this.params.removeFlag) {
       if (!this.params.storageZoneName) {
         throw new Error("Can't remove, storageZoneName was not set.");
       }
@@ -84,7 +91,7 @@ class Main {
   }
 
   private async upload() {
-    if (this.params.uploadFlag === "true") {
+    if (this.params.uploadFlag) {
       if (!this.params.source) {
         throw new Error("Can't upload, source was not set.");
       }
@@ -110,7 +117,7 @@ class Main {
   }
 
   private async purge() {
-    if (this.params.purgePullZoneFlag === "true") {
+    if (this.params.purgePullZoneFlag) {
       if (!this.params.pullZoneId) {
         throw new Error("Can't purge, pullZoneId was not set.");
       }
