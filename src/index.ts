@@ -1,4 +1,4 @@
-import { getInput, setFailed, info, warning } from "@actions/core";
+import { getInput, setFailed, setSecret, info, warning } from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";
@@ -37,13 +37,17 @@ class Main {
   }
 
   private getParams(): Params {
+    const storagePassword = getInput("storagePassword");
+    const accessKey = getInput("accessKey");
+    if (storagePassword) setSecret(storagePassword);
+    if (accessKey) setSecret(accessKey);
     const result = {
       source: getInput("source"),
       destination: getInput("destination"),
       storageZoneName: getInput("storageZoneName"),
       storageEndpoint: getInput("storageEndpoint") || "storage.bunnycdn.com",
-      storagePassword: getInput("storagePassword"),
-      accessKey: getInput("accessKey"),
+      storagePassword,
+      accessKey,
       pullZoneId: getInput("pullZoneId"),
 
       purgePullZoneFlag: getInput("purgePullZone"),
