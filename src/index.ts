@@ -90,25 +90,23 @@ class Main {
       if (!this.params.storagePassword) {
         throw new Error("Can't upload, storagePassword was not set.");
       }
-      if (this.params.storageZoneName && this.params.storagePassword) {
-        info(
-          `Uploading ${this.params.source} folder/file to storage ${this.params.storageZoneName}`,
-        );
-        await new Uploader(
-          this.params.source,
-          this.params.destination,
-          this.params.storageZoneName,
-          this.params.storagePassword,
-          this.params.storageEndpoint,
-          this.parseMaxRetriesParam(),
-          { info, warning },
-        ).run();
-      }
+      info(
+        `Uploading ${this.params.source} folder/file to storage ${this.params.storageZoneName}`,
+      );
+      await new Uploader(
+        this.params.source,
+        this.params.destination,
+        this.params.storageZoneName,
+        this.params.storagePassword,
+        this.params.storageEndpoint,
+        this.parseMaxRetriesParam(),
+        { info, warning },
+      ).run();
     }
   }
 
   private async purge() {
-    if (this.params.purgePullZoneFlag == "true") {
+    if (this.params.purgePullZoneFlag === "true") {
       if (!this.params.pullZoneId) {
         throw new Error("Can't purge, pullZoneId was not set.");
       }
@@ -125,16 +123,14 @@ class Main {
       if (purgePullZoneDelay < 0) {
         throw new Error("Can't purge, purgePullZoneDelay is negative.");
       }
-      if (this.params.pullZoneId && this.params.accessKey) {
-        info(`Purging pull zone with the id ${this.params.pullZoneId}`);
-        await purge(
-          this.params.pullZoneId,
-          this.params.accessKey,
-          purgePullZoneDelay,
-          this.parseMaxRetriesParam(),
-          { info, warning },
-        );
-      }
+      info(`Purging pull zone with the id ${this.params.pullZoneId}`);
+      await purge(
+        this.params.pullZoneId,
+        this.params.accessKey,
+        purgePullZoneDelay,
+        this.parseMaxRetriesParam(),
+        { info, warning },
+      );
     }
   }
 
