@@ -1,4 +1,11 @@
-import { getInput, setFailed, info, warning } from "@actions/core";
+import {
+  getInput,
+  getBooleanInput,
+  setFailed,
+  setSecret,
+  info,
+  warning,
+} from "@actions/core";
 import { join, isAbsolute } from "path";
 import Uploader from "./uploader";
 import purge from "./purge";
@@ -12,10 +19,10 @@ type Params = {
   storagePassword: string;
   accessKey: string;
   pullZoneId: string;
-  purgePullZoneFlag: string;
+  purgePullZoneFlag: boolean;
   purgePullZoneDelay: string;
-  removeFlag: string;
-  uploadFlag: string;
+  removeFlag: boolean;
+  uploadFlag: boolean;
   maxRetries: string;
 };
 
@@ -37,19 +44,23 @@ class Main {
   }
 
   private getParams(): Params {
+    const storagePassword = getInput("storagePassword");
+    const accessKey = getInput("accessKey");
+    if (storagePassword) setSecret(storagePassword);
+    if (accessKey) setSecret(accessKey);
     const result = {
       source: getInput("source"),
       destination: getInput("destination"),
       storageZoneName: getInput("storageZoneName"),
       storageEndpoint: getInput("storageEndpoint") || "storage.bunnycdn.com",
-      storagePassword: getInput("storagePassword"),
-      accessKey: getInput("accessKey"),
+      storagePassword,
+      accessKey,
       pullZoneId: getInput("pullZoneId"),
 
-      purgePullZoneFlag: getInput("purgePullZone"),
+      purgePullZoneFlag: getBooleanInput("purgePullZone"),
       purgePullZoneDelay: getInput("purgePullZoneDelay"),
-      removeFlag: getInput("remove"),
-      uploadFlag: getInput("upload"),
+      removeFlag: getBooleanInput("remove"),
+      uploadFlag: getBooleanInput("upload"),
 
       maxRetries: getInput("maxRetries"),
     };
@@ -60,7 +71,7 @@ class Main {
   }
 
   private async remove() {
-    if (this.params.removeFlag === "true") {
+    if (this.params.removeFlag) {
       if (!this.params.storageZoneName) {
         throw new Error("Can't remove, storageZoneName was not set.");
       }
@@ -80,7 +91,7 @@ class Main {
   }
 
   private async upload() {
-    if (this.params.uploadFlag === "true") {
+    if (this.params.uploadFlag) {
       if (!this.params.source) {
         throw new Error("Can't upload, source was not set.");
       }
@@ -90,25 +101,23 @@ class Main {
       if (!this.params.storagePassword) {
         throw new Error("Can't upload, storagePassword was not set.");
       }
-      if (this.params.storageZoneName && this.params.storagePassword) {
-        info(
-          `Uploading ${this.params.source} folder/file to storage ${this.params.storageZoneName}`,
-        );
-        await new Uploader(
-          this.params.source,
-          this.params.destination,
-          this.params.storageZoneName,
-          this.params.storagePassword,
-          this.params.storageEndpoint,
-          this.parseMaxRetriesParam(),
-          { info, warning },
-        ).run();
-      }
+      info(
+        `Uploading ${this.params.source} folder/file to storage ${this.params.storageZoneName}`,
+      );
+      await new Uploader(
+        this.params.source,
+        this.params.destination,
+        this.params.storageZoneName,
+        this.params.storagePassword,
+        this.params.storageEndpoint,
+        this.parseMaxRetriesParam(),
+        { info, warning },
+      ).run();
     }
   }
 
   private async purge() {
-    if (this.params.purgePullZoneFlag == "true") {
+    if (this.params.purgePullZoneFlag) {
       if (!this.params.pullZoneId) {
         throw new Error("Can't purge, pullZoneId was not set.");
       }
@@ -125,16 +134,14 @@ class Main {
       if (purgePullZoneDelay < 0) {
         throw new Error("Can't purge, purgePullZoneDelay is negative.");
       }
-      if (this.params.pullZoneId && this.params.accessKey) {
-        info(`Purging pull zone with the id ${this.params.pullZoneId}`);
-        await purge(
-          this.params.pullZoneId,
-          this.params.accessKey,
-          purgePullZoneDelay,
-          this.parseMaxRetriesParam(),
-          { info, warning },
-        );
-      }
+      info(`Purging pull zone with the id ${this.params.pullZoneId}`);
+      await purge(
+        this.params.pullZoneId,
+        this.params.accessKey,
+        purgePullZoneDelay,
+        this.parseMaxRetriesParam(),
+        { info, warning },
+      );
     }
   }
 
